@@ -1,4 +1,4 @@
-export class Echelle{
+class Echelle{
     /**
      * Objet Echelle
      * @param intX Pos X

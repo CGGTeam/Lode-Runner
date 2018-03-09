@@ -1,4 +1,4 @@
-export class EntiteDynamique{
+class EntiteDynamique{
     /**
      * Base pour entites dynamiques
      * @param posInitX position initiale
