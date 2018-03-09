@@ -3,9 +3,11 @@ import {Dessinable} from './Dessinable'
 export class Niveau {
   enumTypesBlocs = Object.freeze([
     '',
-    './img/brick.png',
-    './img/crate.png',
-    './img/ladder.png',
-    './img/'
+    '../assets/img/brick.png',
+    '../assets/img/crate.png',
+    '../assets/img/ladder.png',
+    '../assets/img/climb.png',
+    '../assets/img/lingot.png',
+    '../assets/img/bloc.png'
   ])
 }
