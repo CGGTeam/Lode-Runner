@@ -10,14 +10,16 @@ export class Echelle extends dessinable{
      */
     constructor(intX, intY1, intY2, objBlocAcc){
 
-        super(function dessiner() {
-
-        });
+        super();
 
         this.intX = intX;
         this.intY1 = intY1;
         this.intY2 = intY2;
         this.objBlocAcc = objBlocAcc;
         this.objBlocOrigin = null;
+    }
+
+    dessiner () {
+
     }
 }

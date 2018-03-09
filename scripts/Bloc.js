@@ -11,11 +11,7 @@ export class Bloc extends dessinable{
      */
     constructor(posXGauche, posY, intLongueur, intHauteur = 1, tEchelles = []){
 
-        super(function dessiner () {
-
-        });
-
-
+        super();
         this.posXGauche = posXGauche;
         this.posY = posY;
         this.intLongueur = intLongueur;
@@ -24,6 +20,10 @@ export class Bloc extends dessinable{
         for(let i = 0; i<this.tEchelles.length; i++){
             this.tEchelles[i].blocOrigine = this;
         }
+
+    }
+
+    dessiner () {
 
     }
 }
