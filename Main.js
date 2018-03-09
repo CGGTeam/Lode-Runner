@@ -1,3 +1,3 @@
-function main() {
-  
+window.onload = () => {
+    //Main/point d'entrée
 }
