@@ -1,4 +1,6 @@
-export class Bloc {
+import {dessinable} from "./Dessinable";
+
+export class Bloc extends dessinable{
     /**
      * Blocs de jeu (separes par trous ou fin de carte)
      * @param posXGauche Position de la coordonnes la plus a gauche
@@ -8,6 +10,12 @@ export class Bloc {
      * @param tEchelles tableau d'objets echelles
      */
     constructor(posXGauche, posY, intLongueur, intHauteur = 1, tEchelles = []){
+
+        super(function dessiner () {
+
+        });
+
+
         this.posXGauche = posXGauche;
         this.posY = posY;
         this.intLongueur = intLongueur;
@@ -16,5 +24,6 @@ export class Bloc {
         for(let i = 0; i<this.tEchelles.length; i++){
             this.tEchelles[i].blocOrigine = this;
         }
+
     }
 }

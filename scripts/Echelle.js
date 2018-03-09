@@ -1,4 +1,6 @@
-export class Echelle{
+import {dessinable} from "./Dessinable";
+
+export class Echelle extends dessinable{
     /**
      * Objet Echelle
      * @param intX Pos X
@@ -7,6 +9,11 @@ export class Echelle{
      * @param objBlocAcc Bloc accessible via cet objet
      */
     constructor(intX, intY1, intY2, objBlocAcc){
+
+        super(function dessiner() {
+
+        });
+
         this.intX = intX;
         this.intY1 = intY1;
         this.intY2 = intY2;
