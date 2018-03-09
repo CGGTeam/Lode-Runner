@@ -1,5 +1,3 @@
-export class dessinable {
-  constructor(dessiner) {
-    this.dessiner = dessiner;
-  }
+export class Dessinable {
+  dessiner () {}
 }
