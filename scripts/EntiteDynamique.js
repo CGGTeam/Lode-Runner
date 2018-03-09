@@ -1,4 +1,4 @@
-class EntiteDynamique{
+class EntiteDynamique extends Dessinable{
     /**
      * Base pour entites dynamiques
      * @param posInitX position initiale

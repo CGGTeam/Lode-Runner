@@ -1,4 +1,4 @@
-class Echelle{
+class Echelle extends Dessinable{
     /**
      * Objet Echelle
      * @param intX Pos X

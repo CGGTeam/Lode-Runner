@@ -1,4 +1,4 @@
-class Bloc {
+class Bloc extends Dessinable{
     /**
      * Blocs de jeu (separes par trous ou fin de carte)
      * @param posXGauche Position de la coordonnes la plus a gauche
