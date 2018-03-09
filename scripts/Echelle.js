@@ -1,6 +1,4 @@
-import {dessinable} from "./Dessinable";
-
-export class Echelle extends dessinable{
+class Echelle{
     /**
      * Objet Echelle
      * @param intX Pos X

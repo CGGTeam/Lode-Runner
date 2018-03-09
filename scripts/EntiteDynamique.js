@@ -1,6 +1,4 @@
-import {dessinable} from "./Dessinable";
-
-export class EntiteDynamique extends dessinable{
+class EntiteDynamique{
     /**
      * Base pour entites dynamiques
      * @param posInitX position initiale

@@ -1,6 +1,4 @@
-import {dessinable} from "./Dessinable";
-
-export class Bloc extends dessinable{
+class Bloc {
     /**
      * Blocs de jeu (separes par trous ou fin de carte)
      * @param posXGauche Position de la coordonnes la plus a gauche

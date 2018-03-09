@@ -1,6 +1,4 @@
-import {EntiteDynamique} from "./EntiteDynamique";
-
-export class Garde extends EntiteDynamique{
+class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY) {
         super();
