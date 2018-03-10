@@ -1,8 +1,10 @@
 class Joueur extends EntiteDynamique{
     constructor(posInitX, posInitY) {
-        super(posInitX, posInitY, function dessiner() {
-
-        });
+        super();
         this.score = 0;
+    }
+
+    dessiner () {
+
     }
 }

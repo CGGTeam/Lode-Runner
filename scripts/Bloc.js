@@ -8,8 +8,13 @@ class Bloc extends Dessinable{
      * @param tEchelles tableau d'objets echelles
      */
     constructor(posXGauche, posY, intLongueur, intHauteur = 1, tEchelles = []){
+<<<<<<< HEAD
         super();
 
+=======
+
+        super();
+>>>>>>> fc6dfe65bf030c54e916e1d6dfbc52ffdbc3e45e
         this.posXGauche = posXGauche;
         this.posY = posY;
         this.intLongueur = intLongueur;
@@ -32,6 +37,10 @@ class Bloc extends Dessinable{
     }
 
     mettreAJourAnimation() {
+
+    }
+
+    dessiner () {
 
     }
 }
