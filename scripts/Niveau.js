@@ -39,12 +39,14 @@ class Niveau extends Dessinable{
   lireFichierNiveau() {
     fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau)
     .then(response => response.text())
-    .then(text => this.traiterFichier(text))
     .catch((err) => {
       console.error(err);
       console.warn('Fichier ' + this.strFichierNiveau + ' absent du serveur. Niveau par défaut utilisé');
       this.traiterFichier(this.strFichierNiveau);
-    });
+    })
+    .then(text => this.traiterFichier(text))
+    .catch((err) => console.error(err));
+    
     console.log('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau);
   }
   
