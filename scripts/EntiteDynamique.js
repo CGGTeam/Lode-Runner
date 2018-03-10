@@ -5,7 +5,7 @@ class EntiteDynamique extends Dessinable{
      * @param posInitY position initiale
      * @param dessiner
      */
-    constructor(posInitX, posInitY, dessiner){
+    constructor(posInitX, posInitY){
         super();
         this.posX = posInitX;
         this.posY = posInitY;
@@ -19,4 +19,5 @@ class EntiteDynamique extends Dessinable{
         this.posX += intDeplX;
         this.posY += intDeplY;
     }
+
 }

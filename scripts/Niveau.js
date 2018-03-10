@@ -23,7 +23,7 @@ class Niveau extends Dessinable{
     '0000000002000000000020000000\n' +
     '0000000402333333333320004000\n' +
     '0000211111100000000011111112\n' +
-    '0000200000000000004000000002\n' +
+    '0000200000000600004000000002\n' +
     '1111111111111111111111111111\n' +
     '5555555555555555555555555555';
 
@@ -37,15 +37,15 @@ class Niveau extends Dessinable{
   }
 
   lireFichierNiveau() {
-    fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau)
-    .then(response => response.text())
-    .catch((err) => {
-      console.error(err);
-      console.warn('Fichier ' + this.strFichierNiveau + ' absent du serveur. Niveau par défaut utilisé');
-      this.traiterFichier(this.strFichierNiveau);
-    })
-    .then(text => this.traiterFichier(text))
-    .catch((err) => console.error(err));
+   // fetch('https://antoine-bl.github.io/Lode-Runner/assetsads/maps/' + this.strFichierNiveau)
+   // .then(response => response.text())
+  //  .catch((err) => {
+   //   console.error(err);
+  //    console.warn('Fichier ' + this.strFichierNiveau + ' absent du serveur. Niveau par défaut utilisé');
+      this.traiterFichier(this.niveauDefaut);
+   // })
+   // .then(text => this.traiterFichier(text))
+   // .catch((err) => console.error(err));
     
     console.log('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau);
   }
@@ -128,6 +128,9 @@ class Niveau extends Dessinable{
           case '5':
             this.tabCasesImbrisables.push(new CaseImbrisable(j, i));
             break;
+          case '6':
+            this.objJoueur = new Joueur(j,i);
+            break;
         }
         if (binBloc) {
           let objDernierBloc = tabBlocsLus.slice(-1)[0];
@@ -154,6 +157,7 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables.forEach(c => c.dessiner());
     this.tabEchelles.forEach(e => e.dessiner());
     this.tabLingots.forEach(l => l.dessiner());
+    this.objJoueur.dessiner();
   }
 
   mettreAJourAnimation() {

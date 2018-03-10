@@ -15,15 +15,15 @@ class Jeu {
     }
 
     bouclePrincipale () {
-        console.log('bouclePrincipale()');
+        //console.log('bouclePrincipale()');
         this.effacerEcran();
         this.mettreAJourAnimation();
         this.dessiner();
         this.counter++;
-        if (this.counter < 30) {
-            console.log('wtf')
+       // if (this.counter < 30) {
+       //     console.log('wtf')
             window.requestAnimationFrame(() => this.bouclePrincipale());
-        }
+       // }
     }
 
     effacerEcran() {
