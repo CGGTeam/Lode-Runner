@@ -1,8 +1,8 @@
 class Lingot extends Dessinable{
     constructor(posx, posy){
         super();
-        this.posx;
-        this.posy;
+        this.posx = posx;
+        this.posy = posy;
     }
 
     dessiner () {
