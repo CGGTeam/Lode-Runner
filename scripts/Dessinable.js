@@ -2,7 +2,7 @@ class Dessinable {
   dessiner () {
     console.error('Fonction non implémentée');
   }
-  mettreAJour () {
+  mettreAJourAnimation () {
     console.error('Fonction non implémentée');
   }
 }
