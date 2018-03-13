@@ -32,7 +32,8 @@ class Niveau extends Dessinable{
       Echelle.prototype.constructor,
       Barre.prototype.constructor,
       Lingot.prototype.constructor,
-      Bloc.prototype.constructor
+      Bloc.prototype.constructor,
+      Joueur.prototype.constructor
     ];
     this.tabBlocs = [];
     this.tabEchelles = [];
@@ -63,9 +64,14 @@ class Niveau extends Dessinable{
       for (let j = 0; j < tabLignes[i].length; j++) { 
         let intNbLu = parseInt(tabLignes[i].charAt(j));
         if (this.tabCodeBlocs[intNbLu]) {
-          let objCtor = this.tabCodeBlocs[intNbLu];
-          let fctFactory = objCtor.bind(objCtor);
-          this.tabGrilleNiveau[i][j] = new fctFactory(j, i);
+            let objCtor = this.tabCodeBlocs[intNbLu];
+            let fctFactory = objCtor.bind(objCtor, j, i);
+            let objet = new fctFactory();
+            if (intNbLu == 6) {
+              this.objJoueur = objet;
+            }else {
+                this.tabGrilleNiveau[i][j] = objet;
+            }
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
@@ -210,6 +216,9 @@ class Niveau extends Dessinable{
         }
       }
     }
+
+    if(this.objJoueur) this.objJoueur.dessiner();
+
   }
 
   mettreAJourAnimation() {
@@ -217,6 +226,6 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables.forEach(c => c.mettreAJourAnimation());
     this.tabEchelles.forEach(e => e.mettreAJourAnimation());
     this.tabLingots.forEach(l => l.mettreAJourAnimation());
-    this.objJoueur.mettreAJourAnimation();
+    //this.objJoueur.mettreAJourAnimation();
   }
 }

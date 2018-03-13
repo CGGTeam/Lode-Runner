@@ -9,6 +9,8 @@ class Joueur extends EntiteDynamique{
         document.addEventListener('keydown', (event) => {
             this.joueurOnKeyDown(event.keyCode);
         });
+        this.objImage = new Image();
+        this.objImage.src = 'assets/img/perso.png';
     }
 
     mettreAJourAnimation(){
@@ -23,7 +25,7 @@ class Joueur extends EntiteDynamique{
      */
     joueurOnKeyDown(keyCode){
         console.log(keyCode);
-        if(this.getBloc() !== null || this.getEchelle() !== null) {
+        //if(this.getBloc() !== null || this.getEchelle() !== null) {
             switch (keyCode) {
                 //Left
                 case 37:
@@ -53,7 +55,7 @@ class Joueur extends EntiteDynamique{
                     break;
             }
             console.log('JOUEUR X: ' + this.posX + ' Y: ' + this.posY);
-        }
+        //}
     }
 
     getEchelle(){
@@ -77,6 +79,7 @@ class Joueur extends EntiteDynamique{
     }
 
     dessiner () {
-        dessinerCase(this.posX, this.posY, enumTypesBlocs.objJoueur);
+        objC2D.drawImage(this.objImage, this.posX * dblLargCase,
+            this.posY * dblHautCase, dblLargCase, dblHautCase);
     }
 }
