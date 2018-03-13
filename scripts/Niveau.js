@@ -50,7 +50,7 @@ class Niveau extends Dessinable{
     .catch((err) => {
       console.error(err);
       console.warn('Fichier ' + this.strFichierNiveau + ' absent du serveur. Niveau par défaut utilisé');
-      this.traiterFichier(this.strFichierNiveau);
+      this.traiterFichier(this.strNiveauDefaut);
     })
     .then(text => this.traiterFichier(text))
     // .catch((err) => console.error(err));
