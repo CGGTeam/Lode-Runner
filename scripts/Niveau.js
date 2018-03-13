@@ -7,7 +7,7 @@ class Niveau extends Dessinable{
   constructor(strFichierNiveau) {
     super();
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
-    this.niveauDefaut =
+    this.strNiveauDefaut =
     '0000000000000000000000000000\n' +
     '0000400000000000000000000000\n' +
     '1111111211111110000000000000\n' +
