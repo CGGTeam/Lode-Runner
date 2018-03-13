@@ -1,11 +1,5 @@
-class Lingot extends Dessinable{
-    constructor(posx, posy){
-        super();
-        this.posx = posx;
-        this.posy = posy;
-    }
-
-    dessiner () {
-        dessinerCase(this.posx, this.posy, enumTypesBlocs.objLingot);
+class Lingot extends Case{
+    constructor (intPosX, intPosY) {
+        super(intPosX, intPosY, enumTypesBlocs.objLingot.objImage);
     }
 }
