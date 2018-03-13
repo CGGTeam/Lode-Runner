@@ -7,7 +7,7 @@ class Niveau extends Dessinable{
   constructor(strFichierNiveau) {
     super();
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
-    this.niveauDefaut =
+    this.strNiveauDefaut =
     '0000000000000000000000000000\n' +
     '0000400000000000000000000000\n' +
     '1111111211111110000000000000\n' +
@@ -49,12 +49,11 @@ class Niveau extends Dessinable{
     fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau)
     .then(response => response.text())
     .catch((err) => {
-      console.error(err);
-      console.warn('Fichier ' + this.strFichierNiveau + ' absent du serveur. Niveau par défaut utilisé');
-      this.traiterFichier(this.strFichierNiveau);
+      console.warn('Erreur de communication avec le serveur. Niveau par défaut utilisé');
+      this.traiterFichier(this.strNiveauDefaut);
     })
     .then(text => this.traiterFichier(text))
-    // .catch((err) => console.error(err));
+    .catch((err) => console.error(err));
   }
 
   traiterFichier (strContenuFichier) { 
