@@ -17,9 +17,7 @@ class Jeu {
         this.mettreAJourAnimation();
         this.dessiner();
         this.counter++;
-        if (this.counter < 30) {
-            window.requestAnimationFrame(() => this.bouclePrincipale());
-        }
+        window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
     effacerEcran() {

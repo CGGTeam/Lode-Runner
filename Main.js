@@ -2,6 +2,7 @@ var objCanvas;
 var objC2D;
 var dblLargCase;
 var dblHautCase;
+var objJeu;
 
 window.onload = function () {
     //Main / point d'entrée
@@ -9,5 +10,5 @@ window.onload = function () {
     objC2D = objCanvas.getContext('2d');
     dblLargCase = objCanvas.width / 28;
     dblHautCase = objCanvas.height / 17;
-    new Jeu();
+    objJeu = new Jeu();
 }
