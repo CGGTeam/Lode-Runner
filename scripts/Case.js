@@ -22,11 +22,7 @@ class Case extends Dessinable {
     }
 
     dessiner() {
-        console.log(this.intPosX);
-        console.log(this.intPosY);
-        console.log(this.objImage);
         objC2D.drawImage(this.objImage, this.intPosX * dblLargCase,
                          this.intPosY * dblHautCase, dblLargCase, dblHautCase);
-        
     }
 }
