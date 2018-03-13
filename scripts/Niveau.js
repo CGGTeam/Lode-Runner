@@ -85,22 +85,15 @@ class Niveau extends Dessinable{
         this.tabGrilleNav[i].push(false);
         let intNbLu = parseInt(tabLignes[i].trim().charAt(j));
         if (this.tabCodeBlocs[intNbLu]) {
-<<<<<<< HEAD
           let objCtor = this.tabCodeBlocs[intNbLu];
           let fctFactory = objCtor.bind(objCtor, j, i);
           let objCase = new fctFactory();
-          this.tabGrilleNiveau[i][j] = objCase;
+          if (intNbLu == 6) {
+            this.objJoueur = objCase;
+          }else {
+              this.tabGrilleNiveau[i][j] = objCase;
+          }
           objCase.updateNav(this.tabGrilleNav);
-=======
-            let objCtor = this.tabCodeBlocs[intNbLu];
-            let fctFactory = objCtor.bind(objCtor, j, i);
-            let objet = new fctFactory();
-            if (intNbLu == 6) {
-              this.objJoueur = objet;
-            }else {
-                this.tabGrilleNiveau[i][j] = objet;
-            }
->>>>>>> b3e696f88837c8b6a723bd5a60d315c3d8d3195c
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
@@ -250,21 +243,12 @@ class Niveau extends Dessinable{
     }
 
     if(this.objJoueur) this.objJoueur.dessiner();
-
   }
 
   /**
    * Appelle les fonctions de mise à jour d'animation de tous les objets du niveau
    */
   mettreAJourAnimation() {
-<<<<<<< HEAD
     this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
-=======
-    this.tabBlocs.forEach(b => b.mettreAJourAnimation());
-    this.tabCasesImbrisables.forEach(c => c.mettreAJourAnimation());
-    this.tabEchelles.forEach(e => e.mettreAJourAnimation());
-    this.tabLingots.forEach(l => l.mettreAJourAnimation());
-    //if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
->>>>>>> b3e696f88837c8b6a723bd5a60d315c3d8d3195c
   }
 }
