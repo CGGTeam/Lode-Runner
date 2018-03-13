@@ -9,6 +9,14 @@ class Joueur extends EntiteDynamique{
         document.addEventListener('keydown', (event) => {
             this.joueurOnKeyDown(event.keyCode);
         });
+        this.objImage = new Image();
+        this.objImage.src = 'assets/img/perso.png';
+    }
+
+    mettreAJourAnimation(){
+        if(this.getBloc() === null && this.getEchelle() === null){
+            this.deplacer(0, 0.05);
+        }
     }
 
     /**
@@ -17,41 +25,43 @@ class Joueur extends EntiteDynamique{
      */
     joueurOnKeyDown(keyCode){
         console.log(keyCode);
-       switch (keyCode){
-           //Left
-           case 37:
-               this.deplacer(-VITESSE_JOUEUR/KEYS_PER_SECONDS, 0);
-               break;
-           //Up
-           case 38:
-               console.log(this.getBloc());
-               console.log(this.getEchelle());
-               let echelleU = this.getEchelle();
-               if(echelleU !== null &&  Math.round(this.posY*1000)/1000 !== echelleU.intY1 - 1){
-                   this.deplacer(0, -0.1);
-               }
-               break;
-           //Right
-           case 39:
-               this.deplacer(VITESSE_JOUEUR/KEYS_PER_SECONDS, 0);
-               break;
-           //Down
-           case 40:
-               console.log(this.getBloc());
-               console.log(this.getEchelle());
-               let echelleD = this.getEchelle();
-               if(echelleD !== null &&  Math.round(this.posY*1000)/1000 !== echelleD.intY2){
-                   this.deplacer(0, 0.1);
-               }
-               break;
-       }
-        console.log('JOUEUR X: ' + this.posX + ' Y: ' + this.posY);
+        //if(this.getBloc() !== null || this.getEchelle() !== null) {
+            switch (keyCode) {
+                //Left
+                case 37:
+                    this.deplacer(-VITESSE_JOUEUR / KEYS_PER_SECONDS, 0);
+                    break;
+                //Up
+                case 38:
+                    console.log(this.getBloc());
+                    console.log(this.getEchelle());
+                    let echelleU = this.getEchelle();
+                    if (echelleU !== null && Math.round(this.posY * 100) / 100 !== echelleU.intY1 - 1) {
+                        this.deplacer(0, -0.1);
+                    }
+                    break;
+                //Right
+                case 39:
+                    this.deplacer(VITESSE_JOUEUR / KEYS_PER_SECONDS, 0);
+                    break;
+                //Down
+                case 40:
+                    console.log(this.getBloc());
+                    console.log(this.getEchelle());
+                    let echelleD = this.getEchelle();
+                    if (echelleD !== null && Math.round(this.posY * 100) / 100 !== echelleD.intY2) {
+                        this.deplacer(0, 0.1);
+                    }
+                    break;
+            }
+            console.log('JOUEUR X: ' + this.posX + ' Y: ' + this.posY);
+        //}
     }
 
     getEchelle(){
         let echelleCourante = null;
         objJeu.tabObjets[0].tabEchelles.forEach(o => {
-            if(o.intY1 <= Math.round(this.posY*1000)/1000 + 1 && o.intY2 >= Math.round(this.posY*1000)/1000 && Math.round(this.posX) === o.intX){
+            if(o.intY1 <= Math.round(this.posY*100)/100 + 1 && o.intY2 >= Math.round(this.posY*100)/100 && Math.round(this.posX) === o.intX){
                 echelleCourante = o;
             }
         });
@@ -61,7 +71,7 @@ class Joueur extends EntiteDynamique{
     getBloc(){
         let blocCourant = null;
         objJeu.tabObjets[0].tabBlocs.forEach(o => {
-            if(o.posXGauche <= this.posX && (o.posXGauche + o.intLongueur) >= this.posX && o.posY-1 === this.posY){
+            if(o.posXGauche-0.5 <= this.posX && (o.posXGauche + o.intLongueur + 0.5) >= this.posX && o.posY-1 === Math.round(this.posY*100)/100){
                 blocCourant = o;
             }
         });
@@ -69,6 +79,7 @@ class Joueur extends EntiteDynamique{
     }
 
     dessiner () {
-        dessinerCase(this.posX, this.posY, enumTypesBlocs.objJoueur);
+        objC2D.drawImage(this.objImage, this.posX * dblLargCase,
+            this.posY * dblHautCase, dblLargCase, dblHautCase);
     }
 }

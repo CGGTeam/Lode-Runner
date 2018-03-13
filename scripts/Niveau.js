@@ -32,20 +32,30 @@ class Niveau extends Dessinable{
       Echelle.prototype.constructor,
       Barre.prototype.constructor,
       Lingot.prototype.constructor,
-      Bloc.prototype.constructor
+      Bloc.prototype.constructor,
+      Joueur.prototype.constructor
     ];
+
     this.tabBlocs = [];
     this.tabEchelles = [];
     this.tabLingots = [];
     this.tabCasesImbrisables = [];
     this.tabGrilleNiveau = [];
-    this.strFichierNiveau = strFichierNiveau;
+    this.tabGrilleNav = [];
     this.strCouleurFond = 'black';
-    this.lireFichierNiveau();
+    this.lireFichierNiveau(strFichierNiveau);
+    console.log(this.tabGrilleNav);
+    console.log(this.tabGrilleNiveau)
   }
-
-  lireFichierNiveau() {
-    fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + this.strFichierNiveau)
+  
+  /**
+   * Lit le fichier de niveau fourni sur le serveur web du repo github.
+   * S'il y a échec lors de la récupération du fichier sur le serveur, on utilise le niveau
+   * par défaut défini ci-haut.
+   * @param {String} strFichierNiveau nom du fichier à chercher dans /assets/maps
+   */
+  lireFichierNiveau(strFichierNiveau) {
+    fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + strFichierNiveau)
     .then(response => response.text())
     .catch((err) => {
       console.warn('Erreur de communication avec le serveur. Niveau par défaut utilisé');
@@ -55,16 +65,42 @@ class Niveau extends Dessinable{
     .catch((err) => console.error(err));
   }
 
+  /**
+   * Parse un fichier niveau et créé la grille niveau selon celui-ci.
+   * Le code utilisé est le suivant:
+   * 0: espace vide
+   * 1: brique
+   * 2: échelle
+   * 3: barre de franchissement
+   * 4: lingot d'or
+   * 5: bloc imbrisable (comme ceux en bas tout à fait)
+   * @param {String} strContenuFichier string équivalent au niveau
+   */
   traiterFichier (strContenuFichier) { 
-    let tabLignes = strContenuFichier.split('\n');
+    let tabLignes = strContenuFichier.trim().split('\n');
     for (let i = 0; i < tabLignes.length; i++){
       this.tabGrilleNiveau.push([]);
-      for (let j = 0; j < tabLignes[i].length; j++) { 
-        let intNbLu = parseInt(tabLignes[i].charAt(j));
+      this.tabGrilleNav.push([]);
+      for (let j = 0; j < tabLignes[i].length; j++) {
+        this.tabGrilleNav[i].push(false);
+        let intNbLu = parseInt(tabLignes[i].trim().charAt(j));
         if (this.tabCodeBlocs[intNbLu]) {
+<<<<<<< HEAD
           let objCtor = this.tabCodeBlocs[intNbLu];
-          let fctFactory = objCtor.bind(objCtor);
-          this.tabGrilleNiveau[i][j] = new fctFactory(j, i);
+          let fctFactory = objCtor.bind(objCtor, j, i);
+          let objCase = new fctFactory();
+          this.tabGrilleNiveau[i][j] = objCase;
+          objCase.updateNav(this.tabGrilleNav);
+=======
+            let objCtor = this.tabCodeBlocs[intNbLu];
+            let fctFactory = objCtor.bind(objCtor, j, i);
+            let objet = new fctFactory();
+            if (intNbLu == 6) {
+              this.objJoueur = objet;
+            }else {
+                this.tabGrilleNiveau[i][j] = objet;
+            }
+>>>>>>> b3e696f88837c8b6a723bd5a60d315c3d8d3195c
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
@@ -195,6 +231,9 @@ class Niveau extends Dessinable{
   //   console.log(this.tabEchelles);
   // }
 
+  /**
+   * Déssine les cases, puis les gardes et le joueur
+   */
   dessiner () {
     objC2D.save();
     objC2D.fillStyle = this.strCouleurFond;
@@ -209,12 +248,23 @@ class Niveau extends Dessinable{
         }
       }
     }
+
+    if(this.objJoueur) this.objJoueur.dessiner();
+
   }
 
+  /**
+   * Appelle les fonctions de mise à jour d'animation de tous les objets du niveau
+   */
   mettreAJourAnimation() {
+<<<<<<< HEAD
+    this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
+=======
     this.tabBlocs.forEach(b => b.mettreAJourAnimation());
     this.tabCasesImbrisables.forEach(c => c.mettreAJourAnimation());
     this.tabEchelles.forEach(e => e.mettreAJourAnimation());
     this.tabLingots.forEach(l => l.mettreAJourAnimation());
+    //if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
+>>>>>>> b3e696f88837c8b6a723bd5a60d315c3d8d3195c
   }
 }
