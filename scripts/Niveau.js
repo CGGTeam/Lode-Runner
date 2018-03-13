@@ -165,5 +165,6 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables.forEach(c => c.mettreAJourAnimation());
     this.tabEchelles.forEach(e => e.mettreAJourAnimation());
     this.tabLingots.forEach(l => l.mettreAJourAnimation());
+    this.objJoueur.mettreAJourAnimation();
   }
 }
