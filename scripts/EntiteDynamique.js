@@ -91,7 +91,7 @@ class EntiteDynamique extends Dessinable{
                 this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
             }
             if( value instanceof Brique){
-                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.2 && this.intPosY + 1 < value.intPosY + 0.2 ));
+                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.25 && this.intPosY + 1 < value.intPosY + 0.25 ));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
