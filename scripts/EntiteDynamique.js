@@ -45,6 +45,8 @@ class EntiteDynamique extends Dessinable{
 
         this.binMoveUp = intDeplY < 0 ? true : (intDeplX > 0 ? false : this.binMoveUp);
         this.binMoveRight = intDeplX > 0 ? true : (intDeplX < 0 ? false : this.binMoveRight);
+
+        this.binMoving = true;
     }
 
     /**
