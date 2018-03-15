@@ -51,11 +51,16 @@ class Joueur extends EntiteDynamique {
             this.lastCalled = null;
         }
         this.setColBin();
+        this.binFalling = false;
         if(!this.binBriqueBas && !this.binUp && !this.binDown){
+            console.log("fall");
+            this.binFalling = true;
             this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
             this.tabEtatAnim = this.binMoveRight ? 
             this.enumAnim.FALL_R : this.enumAnim.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
+        }else if(!this.binUp && !this.binDown){
+            this.intPosY = Math.round(this.intPosY);
         }
         
         if (this.binMoving) {
@@ -103,12 +108,12 @@ class Joueur extends EntiteDynamique {
                     console.log(-Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
+                }else if(!this.binFalling){
+                    this.intPosY = Math.ceil(this.intPosY);
                     this.tabEtatAnim = this.enumAnim.CLIMB_U;
                     this.binClimb = true;
                     this.binMoveRight = true;   
                     instanceMoteurSon.jouerSon(0,true);               
-                }else {
-                    this.intPosY = Math.ceil(this.intPosY);
                 }
                 break;
             //Right
@@ -123,10 +128,12 @@ class Joueur extends EntiteDynamique {
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
+                }else if(!this.binFalling){
                     this.tabEtatAnim = this.enumAnim.CLIMB_D;                                                              
-                    instanceMoteurSon.jouerSon(0,true);                                                            
-                }else{
+                    instanceMoteurSon.jouerSon(0,true);
                     this.intPosY = Math.floor(this.intPosY);
+                    this.tabEtatAnim = this.enumAnim.CLIMB_D;
+                    instanceMoteurSon.jouerSon(0,true);                                                            
                 }
                 break;
         }
