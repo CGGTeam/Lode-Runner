@@ -5,12 +5,12 @@ class TypeBloc {
     }
 }
 
-var enumTypesBlocs = Object.freeze({
+const enumTypesBlocs = Object.freeze({
     objBrique: new TypeBloc('./assets/img/brick.png'),
     objEchelle: new TypeBloc('./assets/img/ladder.png'),
-    objGrimpe: new TypeBloc('./assets/img/climb.png'),
-    objLingot: new TypeBloc('./assets/img/lingot.png'),
-    objBloc: new TypeBloc('./assets/img/bloc.png'),
+    objGrimpe: new TypeBloc('./assets/img/rope.png'),
+    objLingot: new TypeBloc('./assets/img/gold.png'),
+    objBloc: new TypeBloc('./assets/img/block.png'),
 });
 
 class Case extends Dessinable {
@@ -23,7 +23,7 @@ class Case extends Dessinable {
 
     dessiner() {
         objC2D.drawImage(this.objImage, this.intPosX * dblLargCase,
-                         this.intPosY * dblHautCase, dblLargCase, dblHautCase);
+                         this.intPosY * dblHautCase);
     }
 
     updateNav(tabGrilleNiveau) {
