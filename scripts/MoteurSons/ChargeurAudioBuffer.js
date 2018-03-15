@@ -57,7 +57,7 @@ class ChargeurAudioBuffer {
         requete.responseType = "arraybuffer";
 
         requete.onload = () => {
-            chargeur.ctxAudio.decodeAudioData(requete.response, chargeur.chargerBuffer, chargeur.erreurChargement)
+            chargeur.ctxAudio.decodeAudioData(requete.response, (b) => {chargeur.chargerBuffer(b, index)}, chargeur.erreurChargement)
         }
 
         requete.onerror = () => {

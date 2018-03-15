@@ -42,6 +42,7 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables = [];
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
+    this.score = 0;
     this.strCouleurFond = 'black';
     this.lireFichierNiveau(strFichierNiveau);
     console.log(this.tabGrilleNav);
@@ -100,6 +101,10 @@ class Niveau extends Dessinable{
         }
       }
     }
+  }
+
+  updateScore(){
+    document.getElementById("score").innerHTML = this.score;
   }
   
   // traiterFichier (contenuFichier) {

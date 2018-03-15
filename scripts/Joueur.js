@@ -1,6 +1,7 @@
 const VITESSE_JOUEUR = 5;  // U/s
 const FPS_ANIMATION = 0.25
 const KEYS_PER_SECONDS = 30;
+
 /**
  * Arrays de positions (index) dans le spritesheet, utiliser sx, sy de drawImage
  */
@@ -126,7 +127,7 @@ class Joueur extends EntiteDynamique {
                 if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
                     this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
                 this.tabEtatAnim = enumCharSpriteSheetMap.RUN_R;  
-                this.binMoveRight = true;                                        
+                this.binMoveRight = true;
                 break;
             //Down
             case 40:
@@ -143,6 +144,23 @@ class Joueur extends EntiteDynamique {
 
         if(this.presentKey != 38 && this.presentKey != 40){
             instanceMoteurSon.stopperSon(0);
+        }
+
+        this.getCollisions().forEach((x) => {
+            if(x instanceof Lingot){
+                instanceMoteurSon.jouerSon(4);
+                objJeu.tabObjets[0].tabGrilleNiveau[x.intPosY][x.intPosX] = null;
+                objJeu.tabObjets[0].score+=10;
+                objJeu.tabObjets[0].updateScore();
+            }
+        });
+
+        if(this.getCollisions().length == 0){
+            instanceMoteurSon.jouerSon(3);
+        }
+
+        if(this.getCollisions().length != 0){
+            instanceMoteurSon.stopperSon(3);
         }
 
     }
