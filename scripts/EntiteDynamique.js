@@ -7,8 +7,8 @@ class EntiteDynamique extends Dessinable{
      */
     constructor(posInitX, posInitY){
         super();
-        this.posX = posInitX;
-        this.posY = posInitY;
+        this.intPosX = posInitX;
+        this.intPosY = posInitY;
         this.or = 0;
         this.etatVie = true;
         this.etatAnim = AnimEnum.DEFAULT;
@@ -16,8 +16,8 @@ class EntiteDynamique extends Dessinable{
     }
 
     deplacer(intDeplX, intDeplY){
-        this.posX += intDeplX;
-        this.posY += intDeplY;
+        this.intPosX = Math.round((intDeplX+this.intPosX)*1000)/1000;
+        this.intPosY = Math.round((intDeplY+this.intPosY)*1000)/1000;
     }
 
 }
