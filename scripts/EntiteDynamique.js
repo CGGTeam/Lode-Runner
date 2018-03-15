@@ -3,16 +3,26 @@ class EntiteDynamique extends Dessinable{
      * Base pour entites dynamiques
      * @param posInitX position initiale
      * @param posInitY position initiale
-     * @param dessiner
+     * @param {Object} enumAnim - État d'animation possibles
+     * @param {Image} objSpriteSheet - spritesheet qui contient les animations
      */
-    constructor(posInitX, posInitY){
+    constructor(posInitX, posInitY, enumAnim, objSpriteSheet){
         super();
         this.intPosX = posInitX;
         this.intPosY = posInitY;
+        this.objSpriteSheet = objSpriteSheet;
         this.or = 0;
         this.etatVie = true;
-        this.etatAnim = AnimEnum.RUN_R;
+        this.enumAnim = enumAnim
+        this.tabEtatAnim = this.enumAnim.RUN_R;
         this.binMoving = false;
+    }
+
+    dessiner() {
+        let intFrameExact = Math.round(this.intAnimFrame)
+        objC2D.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
+                         dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
+                         this.intPosX * dblLargCase, this.intPosY * dblHautCase, dblHautCase, dblLargCase, dblHautCase);
     }
 
     deplacer(intDeplX, intDeplY){
@@ -25,6 +35,18 @@ class EntiteDynamique extends Dessinable{
         this.binBriqueBas = true;
         this.binUp = false;
         this.binDown = false;
+        this.binFalling = false;
+
+    }
+
+    deplacer(intDeplX, intDeplY){
+        this.intPosX = Math.round((intDeplX+this.intPosX)*10000)/10000;
+        this.intPosY = Math.round((intDeplY+this.intPosY)*10000)/10000;
+
+        this.binMoveUp = intDeplY < 0 ? true : (intDeplX > 0 ? false : this.binMoveUp);
+        this.binMoveRight = intDeplX > 0 ? true : (intDeplX < 0 ? false : this.binMoveRight);
+
+        this.binMoving = true;
     }
 
     /**
@@ -69,13 +91,12 @@ class EntiteDynamique extends Dessinable{
                 this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
             }
             if( value instanceof Brique){
-                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 === value.intPosY));
+                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.2 && this.intPosY + 1 < value.intPosY + 0.2 ));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
-
             }
         });
     }
