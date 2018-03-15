@@ -1,5 +1,21 @@
 const VITESSE_JOUEUR = 5;  // U/s
+const FPS_ANIMATION = 0.25
 const KEYS_PER_SECONDS = 30;
+/**
+ * Arrays de positions (index) dans le spritesheet, utiliser sx, sy de drawImage
+ */
+const enumCharSpriteSheetMap = Object.freeze({
+    RUN_R : [[0, 0],[1, 0], [2, 0]],
+    RUN_L : [[3, 0],[4, 0], [5, 0]],
+    FALL_R : [[8, 0]],
+    FALL_L : [[8, 1]],
+    CLIMB_R : [[0, 1],[1, 1], [2, 1]],
+    CLIMB_L : [[3, 1],[4, 1], [5, 1]],
+    CLIMB_U : [[6, 0],[7, 0]],
+    CLIMB_D : [[7, 0],[6, 0]],
+    DIG_R : [6, 0],
+    DIG_L : [7, 0],
+})
 
 class Joueur extends EntiteDynamique {
 
@@ -13,8 +29,14 @@ class Joueur extends EntiteDynamique {
         document.addEventListener('keyup', () => {
             this.setKeyDown(false);
         });
-        this.objImage = new Image();
-        this.objImage.src = 'assets/img/perso.png';
+
+        this.objSpriteSheet = preloadImage('./assets/img/runner.png');
+        this.tabEtatAnim = enumCharSpriteSheetMap.RUN_L;
+        this.intAnimFrame = 0;
+        this.binMoving = false;
+        this.binMoveRight = true;
+        this.binClimb = false;
+
         this.binKeyDown = false;
         this.presentKey = null;
         this.delta = 0;
@@ -35,13 +57,26 @@ class Joueur extends EntiteDynamique {
             console.log("fall");
             this.binFalling = true;
             this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
+            this.tabEtatAnim = this.binMoveRight ? 
+            enumCharSpriteSheetMap.FALL_R : enumCharSpriteSheetMap.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
+        }
+        
+        if (this.binMoving) {
+            this.binMoving = false;                    
+            this.intAnimFrame += FPS_ANIMATION;            
+        }
+
+        if (Math.round(this.intAnimFrame) >= this.tabEtatAnim.length) {
+            this.intAnimFrame = 0;
         }
     }
 
     dessiner() {
-        objC2D.drawImage(this.objImage, this.intPosX * dblLargCase,
-            this.intPosY * dblHautCase, dblLargCase, dblHautCase);
+        let intFrameExact = Math.round(this.intAnimFrame)
+        objC2D.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
+                         dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
+                         this.intPosX * dblLargCase, this.intPosY * dblHautCase, dblHautCase, dblLargCase, dblHautCase);
     }
 
     /**
@@ -72,6 +107,8 @@ class Joueur extends EntiteDynamique {
             case 37:
                 if(!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
                     this.deplacer(-VITESSE_JOUEUR * this.delta /1000, 0);
+                this.tabEtatAnim = enumCharSpriteSheetMap.RUN_L;
+                this.binMoveRight = false;  
                 break;
             //Up
             case 38:
@@ -81,12 +118,18 @@ class Joueur extends EntiteDynamique {
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                 }else if(!this.binFalling){
                     this.intPosY = Math.ceil(this.intPosY);
+                    this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_U;
+                    this.binClimb = true;
+                    this.binMoveRight = true;   
+                    instanceMoteurSon.jouerSon(0,true);               
                 }
                 break;
             //Right
             case 39:
                 if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
                     this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
+                this.tabEtatAnim = enumCharSpriteSheetMap.RUN_R;  
+                this.binMoveRight = true;                                        
                 break;
             //Down
             case 40:
@@ -95,9 +138,16 @@ class Joueur extends EntiteDynamique {
                     this.intPosX = Math.round(this.intPosX);
                 }else if(!this.binFalling){
                     this.intPosY = Math.floor(this.intPosY);
+                    this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_D;
+                    instanceMoteurSon.jouerSon(0,true);                                                            
                 }
                 break;
         }
+
+        if(this.presentKey != 38 && this.presentKey != 40){
+            instanceMoteurSon.stopperSon(0);
+        }
+
     }
 
 
