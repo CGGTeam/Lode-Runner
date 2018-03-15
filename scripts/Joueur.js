@@ -59,6 +59,8 @@ class Joueur extends EntiteDynamique {
             this.tabEtatAnim = this.binMoveRight ? 
             this.enumAnim.FALL_R : this.enumAnim.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
+        }else if(!this.binUp && !this.binDown){
+            this.intPosY = Math.round(this.intPosY);
         }
         
         if (this.binMoving) {
@@ -130,7 +132,7 @@ class Joueur extends EntiteDynamique {
                     this.tabEtatAnim = this.enumAnim.CLIMB_D;                                                              
                     instanceMoteurSon.jouerSon(0,true);
                     this.intPosY = Math.floor(this.intPosY);
-                    this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_D;
+                    this.tabEtatAnim = this.enumAnim.CLIMB_D;
                     instanceMoteurSon.jouerSon(0,true);                                                            
                 }
                 break;
