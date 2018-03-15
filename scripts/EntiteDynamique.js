@@ -18,6 +18,7 @@ class EntiteDynamique extends Dessinable{
         this.binBriqueBas = true;
         this.binUp = false;
         this.binDown = false;
+        this.binFalling = false;
 
     }
 

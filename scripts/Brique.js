@@ -8,4 +8,8 @@ class Brique extends Case{
             tabGrilleNav[this.intPosY - 1][this.intPosX] = true;                    
         }
     }
+
+    creuser(){
+        
+    }
 }
