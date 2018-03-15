@@ -7,7 +7,7 @@ class MoteurSons {
          * @type {Array<HTMLAudioElement>}
          */
         this.ListeSons = [];
-        
+
         this.ListeSons.push(this.createAudioElement('echelle', 'assets/sound/echelle.mp3'));
         this.ListeSons.push(this.createAudioElement('mort', 'assets/sound/dead.mp3'));
     }
@@ -34,9 +34,11 @@ class MoteurSons {
      * @param {boolean} booLoop
      */
     jouerSon(numSon, booLoop = false){
-        this.ListeSons[numSon].currentTime = 0;
-        this.ListeSons[numSon].loop = booLoop;
-        this.ListeSons[numSon].play();
+        if(this.ListeSons[numSon].paused){
+            this.ListeSons[numSon].currentTime = 0;
+            this.ListeSons[numSon].loop = booLoop;
+            this.ListeSons[numSon].play();
+        }
     }
 
     /**

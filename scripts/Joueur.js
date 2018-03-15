@@ -76,6 +76,7 @@ class Joueur extends EntiteDynamique {
             case 38:
                 if (binUp) {
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta*10)/10 /2);
+                    instanceMoteurSon.jouerSon(0,true);
                 }
                 break;
             //Right
@@ -86,9 +87,15 @@ class Joueur extends EntiteDynamique {
             case 40:
                 if (binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10)/10 /2);
+                    instanceMoteurSon.jouerSon(0,true);
                 }
                 break;
         }
+
+        if(this.presentKey != 38 && this.presentKey != 40){
+            objJeu.instanceMoteurSon.stopperSon(0);
+        }
+
     }
 
     /**
