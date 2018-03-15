@@ -109,12 +109,12 @@ class Joueur extends EntiteDynamique {
                     console.log(-Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
-                }else if(!this.binFalling){
-                    this.intPosY = Math.ceil(this.intPosY);
                     this.tabEtatAnim = this.enumAnim.CLIMB_U;
                     this.binClimb = true;
                     this.binMoveRight = true;   
-                    instanceMoteurSon.jouerSon(0,true);               
+                    instanceMoteurSon.jouerSon(0,true);
+                }else if(!this.binFalling){
+                    this.intPosY = Math.ceil(this.intPosY);               
                 }
                 break;
             //Right
@@ -129,12 +129,12 @@ class Joueur extends EntiteDynamique {
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
-                }else if(!this.binFalling){
                     this.tabEtatAnim = this.enumAnim.CLIMB_D;                                                              
                     instanceMoteurSon.jouerSon(0,true);
-                    this.intPosY = Math.floor(this.intPosY);
                     this.tabEtatAnim = this.enumAnim.CLIMB_D;
-                    instanceMoteurSon.jouerSon(0,true);                                                            
+                    instanceMoteurSon.jouerSon(0,true);   
+                }else if(!this.binFalling){
+                    this.intPosY = Math.floor(this.intPosY);                                  
                 }
                 break;
         }
