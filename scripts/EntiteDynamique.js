@@ -36,17 +36,11 @@ class EntiteDynamique extends Dessinable{
         this.binUp = false;
         this.binDown = false;
         this.binFalling = false;
-
-    }
-
-    deplacer(intDeplX, intDeplY){
-        this.intPosX = Math.round((intDeplX+this.intPosX)*10000)/10000;
-        this.intPosY = Math.round((intDeplY+this.intPosY)*10000)/10000;
-
         this.binMoveUp = intDeplY < 0 ? true : (intDeplX > 0 ? false : this.binMoveUp);
         this.binMoveRight = intDeplX > 0 ? true : (intDeplX < 0 ? false : this.binMoveRight);
 
         this.binMoving = true;
+
     }
 
     /**
