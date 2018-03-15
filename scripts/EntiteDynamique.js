@@ -12,10 +12,11 @@ class EntiteDynamique extends Dessinable{
         this.or = 0;
         this.etatVie = true;
         this.etatAnim = AnimEnum.DEFAULT;
-
+        this.binMoving = false;
     }
 
     deplacer(intDeplX, intDeplY){
+        this.binMoving = true;
         this.intPosX = Math.round((intDeplX+this.intPosX)*1000)/1000;
         this.intPosY = Math.round((intDeplY+this.intPosY)*1000)/1000;
     }
