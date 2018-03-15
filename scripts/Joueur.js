@@ -105,7 +105,8 @@ class Joueur extends EntiteDynamique {
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.tabEtatAnim = this.enumAnim.CLIMB_U;
                     this.binClimb = true;
-                    this.binMoveRight = true;                  
+                    this.binMoveRight = true;   
+                    instanceMoteurSon.jouerSon(0,true);               
                 }else {
                     this.intPosY = Math.ceil(this.intPosY);
                 }
@@ -123,10 +124,16 @@ class Joueur extends EntiteDynamique {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
                     this.tabEtatAnim = this.enumAnim.CLIMB_D;                                                              
+                    instanceMoteurSon.jouerSon(0,true);                                                            
                 }else{
                     this.intPosY = Math.floor(this.intPosY);
                 }
                 break;
         }
+
+        if(this.presentKey != 38 && this.presentKey != 40){
+            instanceMoteurSon.stopperSon(0);
+        }
+
     }
 }
