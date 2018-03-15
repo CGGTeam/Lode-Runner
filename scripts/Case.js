@@ -1,16 +1,9 @@
-class TypeBloc { 
-    constructor(strUrl) {
-        this.objImage = new Image();
-        this.objImage.src = strUrl;
-    }
-}
-
 const enumTypesBlocs = Object.freeze({
-    objBrique: new TypeBloc('./assets/img/brick.png'),
-    objEchelle: new TypeBloc('./assets/img/ladder.png'),
-    objGrimpe: new TypeBloc('./assets/img/rope.png'),
-    objLingot: new TypeBloc('./assets/img/gold.png'),
-    objBloc: new TypeBloc('./assets/img/block.png'),
+    objBrique: preloadImage('./assets/img/brick.png'),
+    objEchelle: preloadImage('./assets/img/ladder.png'),
+    objGrimpe: preloadImage('./assets/img/rope.png'),
+    objLingot: preloadImage('./assets/img/gold.png'),
+    objBloc: preloadImage('./assets/img/block.png')
 });
 
 class Case extends Dessinable {
