@@ -19,6 +19,12 @@ class Joueur extends EntiteDynamique {
         this.presentKey = null;
         this.delta = 0;
         this.lastCalled = null;
+        this.binBriqueGauche = false;
+        this.binBriqueDroite = false;
+        this.binBriqueHaut = false;
+        this.binBriqueBas = true;
+        this.binUp = false;
+        this.binDown = false;
     }
 
     mettreAJourAnimation() {
@@ -53,39 +59,42 @@ class Joueur extends EntiteDynamique {
      */
     joueurOnKeyDown() {
 
-        //Check si on peut aller vers le haut ou bas d'une echelle
-        let binUp = false;
-        let binDown = false;
-        this.getCollisions().forEach(value => {
-            if(Echelle.prototype.isPrototypeOf(value)){
-                binUp = (binUp || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY > value.intPosY - 1));
-                binDown = (binDown || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY < value.intPosY));
-            }
-        });
+        this.setColBin();
 
         //DEBUG GAME
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         console.log(this.getCollisions());
+        console.log([this.binBriqueBas, this.binBriqueHaut, this.binBriqueGauche, this.binBriqueDroite]);
+
 
         switch (this.presentKey) {
             //Left
             case 37:
-                this.deplacer(-VITESSE_JOUEUR * this.delta, 0);
+                if(!this.binBriqueGauche)
+                    this.deplacer(-VITESSE_JOUEUR * this.delta, 0);
                 break;
             //Up
             case 38:
-                if (binUp) {
-                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta*10)/10 /2);
+                if (this.binUp) {
+                    console.log(-Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    this.intPosX = Math.round(this.intPosX);
+                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                }else {
+                    this.intPosY = Math.ceil(this.intPosY);
                 }
                 break;
             //Right
             case 39:
-                this.deplacer(VITESSE_JOUEUR * this.delta, 0);
+                if(!this.binBriqueDroite)
+                    this.deplacer(VITESSE_JOUEUR * this.delta, 0);
                 break;
             //Down
             case 40:
-                if (binDown) {
-                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10)/10 /2);
+                if (this.binDown) {
+                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    this.intPosX = Math.round(this.intPosX);
+                }else{
+                    this.intPosY = Math.floor(this.intPosY);
                 }
                 break;
         }
@@ -118,5 +127,30 @@ class Joueur extends EntiteDynamique {
         tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);
 
         return tabObjCollisions;
+    }
+
+    setColBin(){
+//Check si on peut aller vers le haut ou bas d'une echelle
+        this.binUp = false;
+        this.binDown = false;
+        this.binBriqueGauche = false;
+        this.binBriqueDroite = false;
+        this.binBriqueHaut = false;
+        this.binBriqueBas = false;
+        this.getCollisions().forEach(value => {
+            if(value instanceof Echelle){
+                this.binUp = (this.binUp || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY > value.intPosY - 1));
+                this.binDown = (this.binDown || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY < value.intPosY));
+            }
+            if( value instanceof Brique){
+                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 === value.intPosY));
+                this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
+                this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
+                    && this.intPosY < value.intPosY + 0.5 && this.intPosY > value.intPosY - 0.5);
+                this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
+                    && this.intPosY < value.intPosY + 0.5 && this.intPosY > value.intPosY - 0.5);
+
+            }
+        });
     }
 }
