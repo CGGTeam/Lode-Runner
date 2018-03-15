@@ -28,13 +28,18 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
-
         if(this.binKeyDown){
             this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
             this.lastCalled = Date.now();
             this.joueurOnKeyDown();
         }else {
             this.lastCalled = null;
+        }
+        this.setColBin();
+        if(!this.binBriqueBas && !this.binUp && !this.binDown){
+            console.log("fall");
+            this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10 /2)/10);
+            console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         }
     }
 
@@ -59,8 +64,7 @@ class Joueur extends EntiteDynamique {
      */
     joueurOnKeyDown() {
 
-        this.setColBin();
-
+        //this.setColBin();
         //DEBUG GAME
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         console.log(this.getCollisions());
@@ -70,7 +74,7 @@ class Joueur extends EntiteDynamique {
         switch (this.presentKey) {
             //Left
             case 37:
-                if(!this.binBriqueGauche)
+                if(!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
                     this.deplacer(-VITESSE_JOUEUR * this.delta, 0);
                 break;
             //Up
@@ -85,7 +89,7 @@ class Joueur extends EntiteDynamique {
                 break;
             //Right
             case 39:
-                if(!this.binBriqueDroite)
+                if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
                     this.deplacer(VITESSE_JOUEUR * this.delta, 0);
                 break;
             //Down
@@ -139,16 +143,16 @@ class Joueur extends EntiteDynamique {
         this.binBriqueBas = false;
         this.getCollisions().forEach(value => {
             if(value instanceof Echelle){
-                this.binUp = (this.binUp || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY > value.intPosY - 1));
-                this.binDown = (this.binDown || (this.intPosX - 0.25 < value.intPosX && this.intPosX + 0.25 > value.intPosX && this.intPosY < value.intPosY));
+                this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
+                this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
             }
             if( value instanceof Brique){
                 this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 === value.intPosY));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
-                    && this.intPosY < value.intPosY + 0.5 && this.intPosY > value.intPosY - 0.5);
+                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
-                    && this.intPosY < value.intPosY + 0.5 && this.intPosY > value.intPosY - 0.5);
+                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
 
             }
         });
