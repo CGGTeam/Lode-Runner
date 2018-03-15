@@ -1,3 +1,5 @@
+//@ts-check
+
 class Jeu {
     constructor() {
         //initAnimation
@@ -5,6 +7,7 @@ class Jeu {
         this.tabObjets = [];
         this.tabObjets.push(new Niveau('niv1.txt'));
         this.initialiserObjets();
+        this.instanceMoteurSon = new MoteurSons();
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
