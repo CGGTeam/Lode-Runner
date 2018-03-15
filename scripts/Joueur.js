@@ -4,7 +4,7 @@ const KEYS_PER_SECONDS = 30;
 /**
  * Arrays de positions (index) dans le spritesheet, utiliser sx, sy de drawImage
  */
-const enumJoueurMap = Object.freeze({
+const enumMapJoueur = Object.freeze({
     RUN_R : [[0, 0],[1, 0], [2, 0]],
     RUN_L : [[3, 0],[4, 0], [5, 0]],
     FALL_R : [[8, 0]],
@@ -20,7 +20,7 @@ const enumJoueurMap = Object.freeze({
 class Joueur extends EntiteDynamique {
 
     constructor(posInitX, posInitY) {
-        super(posInitX, posInitY, enumJoueurMap, preloadImage('./assets/img/runner.png'));
+        super(posInitX, posInitY, enumMapJoueur, preloadImage('./assets/img/runner.png'));
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         this.score = 0;
         document.addEventListener('keydown', (event) => {
