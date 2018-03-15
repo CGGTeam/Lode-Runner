@@ -92,8 +92,8 @@ class Niveau extends Dessinable{
             this.objJoueur = objCase;
           }else {
               this.tabGrilleNiveau[i][j] = objCase;
+              objCase.updateNav(this.tabGrilleNav);
           }
-          objCase.updateNav(this.tabGrilleNav);
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
@@ -250,5 +250,6 @@ class Niveau extends Dessinable{
    */
   mettreAJourAnimation() {
     this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
+      if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
   }
 }
