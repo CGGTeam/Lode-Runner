@@ -88,6 +88,7 @@ class Niveau extends Dessinable{
           let objCtor = this.tabCodeBlocs[intNbLu];
           let fctFactory = objCtor.bind(objCtor, j, i);
           let objCase = new fctFactory();
+          
           if (intNbLu == 6) {
             this.objJoueur = objCase;
           }else {

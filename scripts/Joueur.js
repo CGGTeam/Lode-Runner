@@ -1,11 +1,8 @@
-const VITESSE_JOUEUR = 1/120;  // U/s
+const VITESSE_JOUEUR = 5;  // U/s
 const FPS_ANIMATION = 0.25
 const KEYS_PER_SECONDS = 30;
 /**
  * Arrays de positions (index) dans le spritesheet, utiliser sx, sy de drawImage
- * EX: drawImage(img, dblLargCase * enumAnimationsJoueur.RUN_R[index][0], 
- *               dblHautCase * enumAnimationsJoueur.RUN_R[index][0], dblLargCase, dblHautCase,
- *               posx, posy);
  */
 const enumCharSpriteSheetMap = Object.freeze({
     RUN_R : [[0, 0],[1, 0], [2, 0]],
@@ -37,18 +34,13 @@ class Joueur extends EntiteDynamique {
         this.tabEtatAnim = enumCharSpriteSheetMap.RUN_L;
         this.intAnimFrame = 0;
         this.binMoving = false;
+        this.binMoveRight = true;
+        this.binClimb = false;
 
         this.binKeyDown = false;
         this.presentKey = null;
         this.delta = 0;
         this.lastCalled = null;
-
-        this.binBriqueGauche = false;
-        this.binBriqueDroite = false;
-        this.binBriqueHaut = false;
-        this.binBriqueBas = true;
-        this.binUp = false;
-        this.binDown = false;
     }
 
     mettreAJourAnimation() {
@@ -61,10 +53,9 @@ class Joueur extends EntiteDynamique {
         }
         this.setColBin();
         if(!this.binBriqueBas && !this.binUp && !this.binDown){
-            console.log("fall");
-            this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10 /2)/10);
-            this.tabEtatAnim = this.tabEtatAnim === enumCharSpriteSheetMap.RUN_L ? 
-                               enumCharSpriteSheetMap.FALL_L : enumCharSpriteSheetMap.FALL_R
+            this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
+            this.tabEtatAnim = this.binMoveRight ? 
+            enumCharSpriteSheetMap.FALL_R : enumCharSpriteSheetMap.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         }
         
@@ -112,16 +103,19 @@ class Joueur extends EntiteDynamique {
             //Left
             case 37:
                 if(!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
-                    this.deplacer(-VITESSE_JOUEUR * this.delta, 0);
+                    this.deplacer(-VITESSE_JOUEUR * this.delta /1000, 0);
                 this.tabEtatAnim = enumCharSpriteSheetMap.RUN_L;
+                this.binMoveRight = false;  
                 break;
             //Up
             case 38:
                 if (this.binUp) {
-                    console.log(-Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    console.log(-Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
-                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta*10)/10);
-                    this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_U;                    
+                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
+                    this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_U;
+                    this.binClimb = true;
+                    this.binMoveRight = true;                  
                 }else {
                     this.intPosY = Math.ceil(this.intPosY);
                 }
@@ -129,13 +123,14 @@ class Joueur extends EntiteDynamique {
             //Right
             case 39:
                 if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
-                    this.deplacer(VITESSE_JOUEUR * this.delta, 0);
-                this.tabEtatAnim = enumCharSpriteSheetMap.RUN_R;                                          
+                    this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
+                this.tabEtatAnim = enumCharSpriteSheetMap.RUN_R;  
+                this.binMoveRight = true;                                        
                 break;
             //Down
             case 40:
                 if (this.binDown) {
-                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
                     this.tabEtatAnim = enumCharSpriteSheetMap.CLIMB_D;                                                              
                 }else{
@@ -145,57 +140,5 @@ class Joueur extends EntiteDynamique {
         }
     }
 
-    /**
-     * Retourne les collisions
-     * @returns {Array}
-     */
-    getCollisions() {
-        let tabObjCollisions = [];
-        let comparateur = function (e, element) {
-            if(!e || !element)
-                return true;
-            return e.intPosX === element.intPosX && e.intPosY === element.intPosY;
-        };
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX)], comparateur);
 
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);
-
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);
-
-        return tabObjCollisions;
-    }
-
-    setColBin(){
-//Check si on peut aller vers le haut ou bas d'une echelle
-        this.binUp = false;
-        this.binDown = false;
-        this.binBriqueGauche = false;
-        this.binBriqueDroite = false;
-        this.binBriqueHaut = false;
-        this.binBriqueBas = false;
-        this.getCollisions().forEach(value => {
-            if(value instanceof Echelle){
-                this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
-                this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
-            }
-            if( value instanceof Brique){
-                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 === value.intPosY));
-                this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
-                this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
-                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
-                this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
-                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
-
-            }
-        });
-    }
 }
