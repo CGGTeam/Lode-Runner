@@ -16,11 +16,10 @@ class Brique extends Case{
         super(intPosX, intPosY, enumTypesBlocs.objBrique);
         this.objSpriteSheet = preloadImage('./assets/img/hole.png');
         this.tabEtatAnim = enumMapBrique.RESTORE;
-        this.dblAnimFrame = 3;
+        this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
+        this.binEnDestruction = false;
         this.binDetruit = false;
-
-        if (intPosX == 0 && intPosY == 2)
-            console.log(this);
+        this.intTimeoutID = null;
     }
 
     updateNav(tabGrilleNav) {
@@ -48,14 +47,37 @@ class Brique extends Case{
             dblLargCase, dblHautCase * intHauteur);
     }
     
+    /**
+     * Detruit le bloc. Celui-ci revient dans 8 secondes.
+     * @param {boolean} binDroite 
+     */
     detruire(binDroite) {
         this.dblAnimFrame = 0;
-        this.binDetruit = true;
         this.tabEtatAnim = binDroite ? enumMapBrique.DESTROY_R : enumMapBrique.DESTROY_L;
-        window.setTimeout(() => {
+        this.intIDDestructionFinie = window.setTimeout(() => {
+            this.binEnDestruction = false; 
+            this.binDetruit = true;
+        }, this.tabEtatAnim.length / FPS_ANIM_BRIQUE / 60 * 1000);
+        this.intTimeoutID = window.setTimeout(() => this.restore(), 8000);
+    }
+
+    /**
+     * Débute l'animation de restoration.
+     */
+    restore() {
+        if (this.binDetruit) {
             this.binDetruit = false;
             this.tabEtatAnim = enumMapBrique.RESTORE;
             this.dblAnimFrame = 0;
-        }, 8000);
+        }
+    }
+
+    /**
+     * Interrompt la destruction du bloc
+     */
+    interrompreDestruction () {
+        window.clearTimeout(this.intTimeoutID);
+        this.tabEtatAnim = enumMapBrique.RESTORE;
+        this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
     }
 }
