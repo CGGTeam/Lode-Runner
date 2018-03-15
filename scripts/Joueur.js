@@ -1,4 +1,4 @@
-const VITESSE_JOUEUR = 1/120;  // U/s
+const VITESSE_JOUEUR = 5;  // U/s
 const KEYS_PER_SECONDS = 30;
 
 class Joueur extends EntiteDynamique {
@@ -38,7 +38,7 @@ class Joueur extends EntiteDynamique {
         this.setColBin();
         if(!this.binBriqueBas && !this.binUp && !this.binDown){
             console.log("fall");
-            this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10 /2)/10);
+            this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         }
     }
@@ -75,14 +75,14 @@ class Joueur extends EntiteDynamique {
             //Left
             case 37:
                 if(!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
-                    this.deplacer(-VITESSE_JOUEUR * this.delta, 0);
+                    this.deplacer(-VITESSE_JOUEUR * this.delta /1000, 0);
                 break;
             //Up
             case 38:
                 if (this.binUp) {
-                    console.log(-Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    console.log(-Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
-                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                 }else {
                     this.intPosY = Math.ceil(this.intPosY);
                 }
@@ -90,12 +90,12 @@ class Joueur extends EntiteDynamique {
             //Right
             case 39:
                 if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
-                    this.deplacer(VITESSE_JOUEUR * this.delta, 0);
+                    this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
                 break;
             //Down
             case 40:
                 if (this.binDown) {
-                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta*10)/10);
+                    this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
                 }else{
                     this.intPosY = Math.floor(this.intPosY);
@@ -115,20 +115,20 @@ class Joueur extends EntiteDynamique {
                 return true;
             return e.intPosX === element.intPosX && e.intPosY === element.intPosY;
         };
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX)], comparateur);
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
 
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.floor(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
 
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);
-        tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
 
         return tabObjCollisions;
     }

@@ -16,8 +16,8 @@ class EntiteDynamique extends Dessinable{
     }
 
     deplacer(intDeplX, intDeplY){
-        this.intPosX = Math.round((intDeplX+this.intPosX)*1000)/1000;
-        this.intPosY = Math.round((intDeplY+this.intPosY)*1000)/1000;
+        this.intPosX = Math.round((intDeplX+this.intPosX)*10000)/10000;
+        this.intPosY = Math.round((intDeplY+this.intPosY)*10000)/10000;
     }
 
 }
