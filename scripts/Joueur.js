@@ -142,7 +142,7 @@ class Joueur extends EntiteDynamique {
         }
 
         if(this.presentKey != 38 && this.presentKey != 40){
-            objJeu.instanceMoteurSon.stopperSon(0);
+            instanceMoteurSon.stopperSon(0);
         }
 
     }

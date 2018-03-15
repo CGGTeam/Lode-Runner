@@ -20,21 +20,28 @@ class MoteurSonsWAAPI {
      */
     this.ListeAudioBuffer = [];
 
-    this.ListeSons.push('https://antoine-bl.github.io/Lode-Runner/assets/sound/echelle.mp3');
-    this.ListeSons.push('https://antoine-bl.github.io/Lode-Runner/assets/sound/dead.mp3');
+    /**
+     * @type {Array<AudioBufferSourceNode>}
+     */
+    this.ListeSonsEnCours = [];
+
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/echelle.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/dead.mp3');
     this.callbackFiniChargerMoteur = callbackFiniChargerMoteur;
+
+    /**
+   * 
+   * @param {Array<AudioBuffer>} lstAudioBuffer 
+   */
+    this.finiChargement = (lstAudioBuffer) => {
+      this.ListeAudioBuffer = lstAudioBuffer;
+      this.callbackFiniChargerMoteur();
+    }
 
     this.chargeurSons = new ChargeurAudioBuffer(this.audioCtx, this.ListeSons, this.finiChargement)
   }
 
-  /**
-   * 
-   * @param {Array<AudioBuffer>} lstAudioBuffer 
-   */
-  finiChargement(lstAudioBuffer) {
-    this.ListeAudioBuffer = lstAudioBuffer;
-    this.callbackFiniChargerMoteur();
-  }
+
 
   /**
    * 
@@ -47,6 +54,13 @@ class MoteurSonsWAAPI {
     source.connect(this.audioCtx.destination);
     source.start(0);
     source.loop = booLoop;
+    this.ListeSonsEnCours[numSon] = source;
+  }
+
+  stopperSon(numSon){
+    let source = this.ListeSonsEnCours[numSon];
+    if(source)
+      source.stop();
   }
 
 }
