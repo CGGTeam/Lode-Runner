@@ -12,3 +12,9 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
         this.push(element);
     }
 };
+
+function preloadImage(strUrl) {
+    var objImage = new Image();
+    objImage.src = strUrl;
+    return objImage;
+}

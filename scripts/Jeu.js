@@ -3,7 +3,6 @@
 class Jeu {
     constructor() {
         //initAnimation
-        this.counter = 0;
         this.tabObjets = [];
         this.tabObjets.push(new Niveau('niv1.txt'));
         this.initialiserObjets();
@@ -18,7 +17,6 @@ class Jeu {
         this.effacerEcran();
         this.mettreAJourAnimation();
         this.dessiner();
-        this.counter++;
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 

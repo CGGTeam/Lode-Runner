@@ -55,7 +55,7 @@ class Niveau extends Dessinable{
    * @param {String} strFichierNiveau nom du fichier à chercher dans /assets/maps
    */
   lireFichierNiveau(strFichierNiveau) {
-    fetch('https://antoine-bl.github.io/Lode-Runner/assets/maps/' + strFichierNiveau)
+    fetch('http://www.antoinebl.com/Lode-Runner/assets/maps/' + strFichierNiveau)
     .then(response => response.text())
     .catch((err) => {
       console.warn('Erreur de communication avec le serveur. Niveau par défaut utilisé');
@@ -88,6 +88,7 @@ class Niveau extends Dessinable{
           let objCtor = this.tabCodeBlocs[intNbLu];
           let fctFactory = objCtor.bind(objCtor, j, i);
           let objCase = new fctFactory();
+          
           if (intNbLu == 6) {
             this.objJoueur = objCase;
           }else {
