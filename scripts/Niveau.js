@@ -9,7 +9,7 @@ class Niveau extends Dessinable{
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
     this.strNiveauDefaut =
     '0000000000000000000000000000\n' +
-    '00004000070000000000000000000\n' +
+    '0000400007000000000000000000\n' +
     '1111111211111110000000000000\n' +
     '0000000233333333330000040000\n' +
     '0000000200001120001111111211\n' +
@@ -43,6 +43,7 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables = [];
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
+    this.score = 0;
     this.tabGardes = [];
     this.strCouleurFond = 'black';
     this.lireFichierNiveau(strFichierNiveau);
@@ -105,6 +106,10 @@ class Niveau extends Dessinable{
         }
       }
     }
+  }
+
+  updateScore(){
+    document.getElementById("score").innerHTML = this.score;
   }
   
   /**
