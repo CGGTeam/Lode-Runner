@@ -3,14 +3,14 @@
 class Jeu {
     constructor() {
         //initAnimation
-        this.tabObjets = [];
-        this.tabObjets.push(new Niveau('niv1.txt'));
+        this.objNiveau;
         this.initialiserObjets();
+        this.score = 0;
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
     initialiserObjets() {
-
+        this.objNiveau = new Niveau('niv1.txt');
     }
 
     bouclePrincipale () {
