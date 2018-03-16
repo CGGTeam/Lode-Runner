@@ -131,7 +131,7 @@ class Niveau extends Dessinable{
     }
 
     if(this.objJoueur) this.objJoueur.dessiner();
-    this.tabGardes.forEach(obj => obj.dessiner());
+    this.tabGardes.forEach(obj => obj.dessiner());      
   }
 
   /**
@@ -139,6 +139,7 @@ class Niveau extends Dessinable{
    */
   mettreAJourAnimation() {
     this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
-      if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
-  }
+    if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
+    this.tabGardes.forEach(obj => obj.mettreAJourAnimation());  
+  }    
 }
