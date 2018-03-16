@@ -14,8 +14,8 @@ const enumMapJoueur = Object.freeze({
     CLIMB_L : [[3, 1],[4, 1], [5, 1]],
     CLIMB_U : [[6, 0],[7, 0]],
     CLIMB_D : [[7, 0],[6, 0]],
-    DIG_R : [6, 0],
-    DIG_L : [7, 0],
+    DIG_R : [[6, 1]],
+    DIG_L : [[7, 1]]
 });
 
 class Joueur extends EntiteDynamique {
@@ -25,17 +25,26 @@ class Joueur extends EntiteDynamique {
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         this.score = 0;
         document.addEventListener('keydown', (event) => {
-            this.setKeyDown(true,event.keyCode);
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'ArrowDown':
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                    event.preventDefault();
+                    break;
+            }
+            this.setKeyDown(true, event.key);
         });
         document.addEventListener('keyup', () => {
             this.setKeyDown(false);
         });
 
         this.tabEtatAnim = this.enumAnim.RUN_L;
-        this.intAnimFrame = 0;
+        this.dblAnimFrame = 0;
         this.binMoving = false;
         this.binMoveRight = true;
         this.binClimb = false;
+        this.objCaseCreusee = null;
 
         this.binKeyDown = false;
         this.presentKey = null;
@@ -51,33 +60,47 @@ class Joueur extends EntiteDynamique {
         }else {
             //this.lastCalled = null;
         }
+        if (this.objCaseCreusee) {
+            console.log(this.objCaseCreusee.binDetruit);
+        }
         this.setColBin();
         this.binFalling = false;
         if(!this.binBriqueBas && !this.binUp && !this.binDown){
             console.log("fall");
             this.binFalling = true;
+            this.binMoving = false;
             this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
             this.tabEtatAnim = this.binMoveRight ? 
             this.enumAnim.FALL_R : this.enumAnim.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
-        }else if(!this.binUp && !this.binDown){
+        } else if (this.objCaseCreusee) { 
+            this.tabEtatAnim = this.binMoveRight ? enumMapJoueur.DIG_R : enumMapJoueur.DIG_L;
+            if (this.objCaseCreusee.binDetruit) {
+                this.objCaseCreusee = null;
+                this.tabEtatAnim = this.binMoveRight ? enumMapJoueur.RUN_R : enumMapJoueur.RUN_L;
+            }
+        } else if(!this.binUp && !this.binDown){
             this.intPosY = Math.round(this.intPosY);
         }
         
-        if (this.binMoving) {
+        if (this.binMoving || this.binFalling) {
+            if (this.objCaseCreusee) {
+                this.objCaseCreusee.interrompreDestruction();
+                this.objCaseCreusee = null;
+            }
             this.binMoving = false;                    
-            this.intAnimFrame += FPS_ANIMATION;            
+            this.dblAnimFrame += FPS_ANIMATION;            
         }
 
-        if (Math.round(this.intAnimFrame) >= this.tabEtatAnim.length) {
-            this.intAnimFrame = 0;
+        if (Math.round(this.dblAnimFrame) >= this.tabEtatAnim.length) {
+            this.dblAnimFrame = 0;
         }
     }
 
     /**
      * Change l'etat keyDown
-     * @param newValue (binKeyDown)
-     * @param newKey (key)
+     * @param {boolean} newValue (binKeyDown)
+     * @param {string} newKey (key)
      */
     setKeyDown(newValue, newKey = null){
         this.binKeyDown = newValue;
@@ -92,19 +115,19 @@ class Joueur extends EntiteDynamique {
         //this.setColBin();
         //DEBUG GAME
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
-        console.log(this.getCollisions());
-        console.log([this.binBriqueBas, this.binBriqueHaut, this.binBriqueGauche, this.binBriqueDroite]);
+        // console.log(this.getCollisions());
+        // console.log([this.binBriqueBas, this.binBriqueHaut, this.binBriqueGauche, this.binBriqueDroite]);
 
         switch (this.presentKey) {
             //Left
-            case 37:
+            case 'ArrowLeft':
                 if(!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
                     this.deplacer(-VITESSE_JOUEUR * this.delta /1000, 0);
                 this.tabEtatAnim = this.enumAnim.RUN_L;
                 this.binMoveRight = false;  
                 break;
             //Up
-            case 38:
+            case 'ArrowUp':
                 if (this.binUp) {
                     console.log(-Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
@@ -118,14 +141,14 @@ class Joueur extends EntiteDynamique {
                 }
                 break;
             //Right
-            case 39:
+            case 'ArrowRight':
                 if(!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
                     this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
                 this.tabEtatAnim = this.enumAnim.RUN_R;  
                 this.binMoveRight = true;                                        
                 break;
             //Down
-            case 40:
+            case 'ArrowDown':
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
@@ -137,9 +160,28 @@ class Joueur extends EntiteDynamique {
                     this.intPosY = Math.floor(this.intPosY);                                  
                 }
                 break;
+            case 'x':
+            case 'z':
+                console.log('dig');
+                this.binMoveRight = this.presentKey === 'x'
+                let objCase = objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY) + 1]
+                                                              [Math.floor(this.intPosX) - (this.presentKey === 'z' ? 1 : -1)];
+                if (this.objCaseCreusee) {
+                    this.objCaseCreusee.interrompreDestruction();
+                    this.objCaseCreusee = null;
+                }
+                
+                if (!this.binFalling && objCase && objCase instanceof Brique) {
+                    this.intPosX = Math.floor(this.intPosX);
+                    this.intPosY = Math.floor(this.intPosY);
+                    objCase.detruire();
+                    this.dblAnimFrame = 0;
+                    this.objCaseCreusee = objCase;                    
+                }
+                break;
         }
 
-        if(this.presentKey != 38 && this.presentKey != 40){
+        if(this.presentKey != 'ArrowUp' && this.presentKey != 'ArrowDown'){
             instanceMoteurSon.stopperSon(0);
         }
 

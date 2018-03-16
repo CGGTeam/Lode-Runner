@@ -30,13 +30,13 @@ class Brique extends Case{
 
     mettreAJourAnimation () {
         this.dblAnimFrame += FPS_ANIM_BRIQUE;
-        if (Math.round(this.dblAnimFrame) >= this.tabEtatAnim.length) {
+        if (Math.floor(this.dblAnimFrame) >= this.tabEtatAnim.length) {
             this.dblAnimFrame = this.tabEtatAnim.length - 1;
         }
     }
 
     dessiner () {
-        let intFrameExact = Math.round(this.dblAnimFrame);
+        let intFrameExact = Math.floor(this.dblAnimFrame);
 
         let intHauteur = this.tabEtatAnim === enumMapBrique.RESTORE ? 1 : 2;
 

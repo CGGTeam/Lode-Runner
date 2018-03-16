@@ -1,8 +1,8 @@
 class EntiteDynamique extends Dessinable{
     /**
      * Base pour entites dynamiques
-     * @param posInitX position initiale
-     * @param posInitY position initiale
+     * @param {Number} posInitX position initiale
+     * @param {Number} posInitY position initiale
      * @param {Object} enumAnim - État d'animation possibles
      * @param {Image} objSpriteSheet - spritesheet qui contient les animations
      */
@@ -19,7 +19,7 @@ class EntiteDynamique extends Dessinable{
     }
 
     dessiner() {
-        let intFrameExact = Math.round(this.intAnimFrame)
+        let intFrameExact = Math.floor(this.dblAnimFrame)
         objC2D.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
                          dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
                          this.intPosX * dblLargCase, this.intPosY * dblHautCase, dblHautCase, dblLargCase, dblHautCase);
@@ -52,6 +52,7 @@ class EntiteDynamique extends Dessinable{
         let comparateur = function (e, element) {
             if(!e || !element)
                 return true;
+
             return e.intPosX === element.intPosX && e.intPosY === element.intPosY;
         };
         try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
@@ -83,8 +84,14 @@ class EntiteDynamique extends Dessinable{
             if(value instanceof Echelle){
                 this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
                 this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
-            }
-            if( value instanceof Brique){
+            } else if( value instanceof Brique){
+                this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.25 && this.intPosY + 1 < value.intPosY + 0.25 ) && !value.binDetruit);
+                this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
+                this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
+                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1  && !value.binDetruit);
+                this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
+                    && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1)  && !value.binDetruit;
+            } else if (value instanceof Bloc) {
                 this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.25 && this.intPosY + 1 < value.intPosY + 0.25 ));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)

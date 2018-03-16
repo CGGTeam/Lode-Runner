@@ -77,7 +77,9 @@ class Niveau extends Dessinable{
    * 3: barre de franchissement
    * 4: lingot d'or
    * 5: bloc imbrisable (comme ceux en bas tout à fait)
-   * @param {String} strContenuFichier string équivalent au niveau
+   * 6: Joueur
+   * 7: Garde
+   * @param {String} strContenuFichier 
    */
   traiterFichier (strContenuFichier) { 
     let tabLignes = strContenuFichier.trim().split('\n');
@@ -132,7 +134,7 @@ class Niveau extends Dessinable{
     }
 
     if(this.objJoueur) this.objJoueur.dessiner();
-    this.tabGardes.forEach(obj => obj.dessiner());
+    this.tabGardes.forEach(obj => obj.dessiner());      
   }
 
   /**
@@ -140,6 +142,7 @@ class Niveau extends Dessinable{
    */
   mettreAJourAnimation() {
     this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
-      if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
-  }
+    if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
+    this.tabGardes.forEach(obj => obj.mettreAJourAnimation());  
+  }    
 }
