@@ -54,20 +54,20 @@ class EntiteDynamique extends Dessinable{
                 return true;
             return e.intPosX === element.intPosX && e.intPosY === element.intPosY;
         };
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
 
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.floor(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
 
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.tabObjets[0].tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
 
         return tabObjCollisions;
     }
