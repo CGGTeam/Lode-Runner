@@ -44,12 +44,12 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
+        this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
+        this.lastCalled = Date.now();
         if(this.binKeyDown && !this.binFalling){
-            this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
-            this.lastCalled = Date.now();
             this.joueurOnKeyDown();
         }else {
-            this.lastCalled = null;
+            //this.lastCalled = null;
         }
         this.setColBin();
         this.binFalling = false;
