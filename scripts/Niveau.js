@@ -77,7 +77,9 @@ class Niveau extends Dessinable{
    * 3: barre de franchissement
    * 4: lingot d'or
    * 5: bloc imbrisable (comme ceux en bas tout à fait)
-   * @param {String} strContenuFichier string équivalent au niveau
+   * 6: Joueur
+   * 7: Garde
+   * @param {String} strContenuFichier 
    */
   traiterFichier (strContenuFichier) { 
     let tabLignes = strContenuFichier.trim().split('\n');
