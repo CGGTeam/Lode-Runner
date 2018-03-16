@@ -44,7 +44,7 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
-        if(this.binKeyDown){
+        if(this.binKeyDown && !this.binFalling){
             this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
             this.lastCalled = Date.now();
             this.joueurOnKeyDown();
@@ -146,9 +146,9 @@ class Joueur extends EntiteDynamique {
         this.getCollisions().forEach((x) => {
             if(x instanceof Lingot){
                 instanceMoteurSon.jouerSon(4);
-                objJeu.tabObjets[0].tabGrilleNiveau[x.intPosY][x.intPosX] = null;
-                objJeu.tabObjets[0].score+=10;
-                objJeu.tabObjets[0].updateScore();
+                objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
+                objJeu.objNiveau.score+=10;
+                objJeu.objNiveau.updateScore();
             }
         });
 
