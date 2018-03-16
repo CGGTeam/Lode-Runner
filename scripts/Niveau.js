@@ -116,11 +116,12 @@ class Niveau extends Dessinable{
    * Déssine les cases, puis les gardes et le joueur
    */
   dessiner () {
-    objC2D.save();
+    //objC2D.save();
     objC2D.fillStyle = this.strCouleurFond;
-    objC2D.rect(0, 0, objCanvas.width, objCanvas.height);
-    objC2D.fill();
-    objC2D.restore();
+    objC2D.fillRect(0, 0, objCanvas.width, objCanvas.height);
+    //objC2D.rect(0, 0, objCanvas.width, objCanvas.height);
+    //objC2D.fill();
+    //objC2D.restore();
 
     for (let i = 0; i < this.tabGrilleNiveau.length; i++) {
       for (let j = 0; j < this.tabGrilleNiveau[i].length; j++) {
