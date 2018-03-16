@@ -1,8 +1,8 @@
 class EntiteDynamique extends Dessinable{
     /**
      * Base pour entites dynamiques
-     * @param posInitX position initiale
-     * @param posInitY position initiale
+     * @param {Number} posInitX position initiale
+     * @param {Number} posInitY position initiale
      * @param {Object} enumAnim - État d'animation possibles
      * @param {Image} objSpriteSheet - spritesheet qui contient les animations
      */
@@ -19,7 +19,7 @@ class EntiteDynamique extends Dessinable{
     }
 
     dessiner() {
-        let intFrameExact = Math.round(this.intAnimFrame)
+        let intFrameExact = Math.floor(this.dblAnimFrame)
         objC2D.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
                          dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
                          this.intPosX * dblLargCase, this.intPosY * dblHautCase, dblHautCase, dblLargCase, dblHautCase);
