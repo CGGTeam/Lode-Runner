@@ -16,7 +16,7 @@ const enumMapJoueur = Object.freeze({
     CLIMB_D : [[7, 0],[6, 0]],
     DIG_R : [6, 0],
     DIG_L : [7, 0],
-})
+});
 
 class Joueur extends EntiteDynamique {
 
