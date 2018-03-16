@@ -14,6 +14,6 @@ class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY) {
         super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard.png'));
-        this.intAnimFrame = 0;
+        this.dblAnimFrame = 0;
     }
 }
