@@ -25,10 +25,10 @@ class Jeu {
     }
 
     mettreAJourAnimation () {
-        this.tabObjets.forEach(o => o.mettreAJourAnimation());
+        this.objNiveau.mettreAJourAnimation();
     }
 
     dessiner () {
-        this.tabObjets.forEach(o => o.dessiner());
+        this.objNiveau.dessiner();
     }
 }
