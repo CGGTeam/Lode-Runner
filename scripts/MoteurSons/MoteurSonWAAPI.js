@@ -27,6 +27,11 @@ class MoteurSonsWAAPI {
 
     this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/echelle.mp3');
     this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/dead.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/dig.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/fall.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/getGold.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/goldFinish1.mp3');
+    this.ListeSons.push('http://www.antoinebl.com/Lode-Runner/assets/sound/trap.mp3');
     this.callbackFiniChargerMoteur = callbackFiniChargerMoteur;
 
     /**
@@ -49,18 +54,26 @@ class MoteurSonsWAAPI {
    * @param {boolean} booLoop
    */
   jouerSon(numSon, booLoop = false) {
-    let source = this.audioCtx.createBufferSource();
-    source.buffer = this.ListeAudioBuffer[numSon];
-    source.connect(this.audioCtx.destination);
-    source.start(0);
-    source.loop = booLoop;
-    this.ListeSonsEnCours[numSon] = source;
+    if(!this.ListeSonsEnCours[numSon]){
+      let source = this.audioCtx.createBufferSource();
+      source.buffer = this.ListeAudioBuffer[numSon];
+      source.connect(this.audioCtx.destination);
+      source.loop = booLoop;
+      source.onended = (!booLoop) ? () => {this.stopperSon(numSon)} : null;
+      source.start(0);
+      source.addEventListener('start', (e) => {
+        console.log(e);
+      });
+      this.ListeSonsEnCours[numSon] = source;
+    }
   }
 
   stopperSon(numSon){
     let source = this.ListeSonsEnCours[numSon];
-    if(source)
+    if(source){
       source.stop();
+      this.ListeSonsEnCours[numSon] = null;
+    }
   }
 
 }

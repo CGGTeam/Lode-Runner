@@ -1,4 +1,4 @@
-const enumMapGarde = Object.freeze({
+const enumGardeMap = Object.freeze({
     RUN_R : [[0, 0],[1, 0], [2, 0]],
     RUN_L : [[3, 0],[4, 0], [5, 0]],
     FALL_R : [[8, 0]],
@@ -13,7 +13,7 @@ const enumMapGarde = Object.freeze({
 class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY) {
-        super(posInitX, posInitY, enumMapGarde, preloadImage('./assets/img/guard.png'));
-        
+        super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard.png'));
+        this.intAnimFrame = 0;
     }
 }
