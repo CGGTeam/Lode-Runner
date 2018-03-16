@@ -43,7 +43,7 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
-        if(this.binKeyDown){
+        if(this.binKeyDown && !this.binFalling){
             this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
             this.lastCalled = Date.now();
             this.joueurOnKeyDown();
