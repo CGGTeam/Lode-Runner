@@ -52,7 +52,7 @@ class Joueur extends EntiteDynamique {
         this.lastCalled = null;
     }
 
-    mettreAJourAnimation() {
+    mettreAJourAnimation() {    
         this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1/40;
         this.lastCalled = Date.now();
         if(this.binKeyDown && !this.binFalling){
@@ -64,7 +64,7 @@ class Joueur extends EntiteDynamique {
             console.log(this.objCaseCreusee.binDetruit);
         }
         this.setColBin();
-        this.binFalling = false;
+        //this.binFalling = false;
         if(!this.binBriqueBas && !this.binUp && !this.binDown){
             console.log("fall");
             this.binFalling = true;
@@ -73,7 +73,11 @@ class Joueur extends EntiteDynamique {
             this.tabEtatAnim = this.binMoveRight ? 
             this.enumAnim.FALL_R : this.enumAnim.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
-        } else if (this.objCaseCreusee) { 
+        } else {
+            if(this.binFalling)
+                this.tabEtatAnim = this.enumAnim.RUN_L;
+            this.binFalling = false;
+            if (this.objCaseCreusee) { 
             this.tabEtatAnim = this.binMoveRight ? enumMapJoueur.DIG_R : enumMapJoueur.DIG_L;
             if (this.objCaseCreusee.binDetruit) {
                 this.objCaseCreusee = null;
@@ -82,6 +86,7 @@ class Joueur extends EntiteDynamique {
         } else if(!this.binUp && !this.binDown){
             this.intPosY = Math.round(this.intPosY);
         }
+    }
         
         if (this.binMoving || this.binFalling) {
             if (this.objCaseCreusee) {
