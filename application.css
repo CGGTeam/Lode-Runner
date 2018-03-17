@@ -11,3 +11,9 @@ canvas {
     width: 320px;
     height: 160px;
 }
+
+@font-face {
+  font-family: Lode;
+  src: url('http://www.antoinebl.com/Lode-Runner/assets/font/lode_runner_c64/lode_runner_c64-webfont.woff') format('woff'), /* Modern Browsers */
+       url('http://www.antoinebl.com/Lode-Runner/assets/font/lode_runner_c64/lode_runner_c64-webfont.ttf')  format('truetype'); /* Safari, Android, iOS */
+}
