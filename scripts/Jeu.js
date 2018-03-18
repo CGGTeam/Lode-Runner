@@ -17,6 +17,7 @@ class Jeu {
         this.effacerEcran();
         this.mettreAJourAnimation();
         this.dessiner();
+        objScore.ctxDrawScoreboard();
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 

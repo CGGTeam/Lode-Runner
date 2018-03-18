@@ -111,7 +111,7 @@ class Niveau extends Dessinable{
   }
 
   updateScore(){
-    document.getElementById("score").innerHTML = this.score;
+    objScore.currentScore = this.score;
   }
   
   /**
