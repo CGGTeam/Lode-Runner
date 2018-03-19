@@ -13,9 +13,9 @@
 
 class Dessinable {
   dessiner () {
-    //console.error('Fonction non implémentée');
+   throw 'Fonction dessiner non implémentée';
   }
   mettreAJourAnimation () {
-    //console.error('Fonction non implémentée');
+    throw 'Fonction majAnimation non implémentée';
   }
 }
