@@ -80,6 +80,7 @@ class EntiteDynamique extends Dessinable{
         this.binBriqueDroite = false;
         this.binBriqueHaut = false;
         this.binBriqueBas = false;
+        this.binBarre = false;
         this.getCollisions().forEach(value => {
             if(value instanceof Echelle){
                 this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
@@ -98,6 +99,8 @@ class EntiteDynamique extends Dessinable{
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
+            }else if ( value instanceof Barre){
+                this.binBarre = true;
             }
         });
     }

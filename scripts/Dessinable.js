@@ -13,9 +13,9 @@
 
 class Dessinable {
   dessiner () {
-   throw 'Fonction dessiner non implémentée';
+   // throw 'Fonction dessiner non implémentée';
   }
   mettreAJourAnimation () {
-    throw 'Fonction majAnimation non implémentée';
+    // throw 'Fonction majAnimation non implémentée';
   }
 }
