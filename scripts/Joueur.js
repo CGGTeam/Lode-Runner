@@ -50,6 +50,7 @@ class Joueur extends EntiteDynamique {
         this.presentKey = null;
         this.delta = 0;
         this.lastCalled = null;
+        this.lastDescBarre = null;
     }
 
     mettreAJourAnimation() {
@@ -65,8 +66,7 @@ class Joueur extends EntiteDynamique {
         }
         this.setColBin();
         //this.binFalling = false;
-        if (!this.binBriqueBas && !this.binUp && !this.binDown) {
-            console.log("fall");
+        if((this.lastDescBarre && this.intPosY - this.lastDescBarre <= 1) || !this.binBriqueBas && !this.binUp && !this.binDown && !this.binBarre){
             this.binFalling = true;
             this.binMoving = false;
             this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
@@ -74,7 +74,10 @@ class Joueur extends EntiteDynamique {
                 this.enumAnim.FALL_R : this.enumAnim.FALL_L;
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         } else {
-            if (this.binFalling)
+            this.lastDescBarre = null;
+            if(this.binFalling && this.binBarre)
+                this.tabEtatAnim = this.enumAnim.CLIMB_R
+            else if(this.binFalling)
                 this.tabEtatAnim = this.enumAnim.RUN_L;
             this.binFalling = false;
             if (this.objCaseCreusee) {
@@ -120,16 +123,19 @@ class Joueur extends EntiteDynamique {
         //this.setColBin();
         //DEBUG GAME
         console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
-        // console.log(this.getCollisions());
+        console.log(this.getCollisions());
         // console.log([this.binBriqueBas, this.binBriqueHaut, this.binBriqueGauche, this.binBriqueDroite]);
 
         switch (this.presentKey) {
             //Left
             case 'ArrowLeft':
-                if (!this.binBriqueGauche && (this.binBriqueBas || this.binDown))
-                    this.deplacer(-VITESSE_JOUEUR * this.delta / 1000, 0);
-                this.tabEtatAnim = this.enumAnim.RUN_L;
-                this.binMoveRight = false;
+                if((!this.binBriqueGauche && (this.binBriqueBas || this.binDown)) || this.binBarre)
+                    this.deplacer(-VITESSE_JOUEUR * this.delta /1000, 0);
+                if(this.binBarre)
+                    this.tabEtatAnim = this.enumAnim.CLIMB_L;
+                else
+                    this.tabEtatAnim = this.enumAnim.RUN_L;
+                this.binMoveRight = false;  
                 break;
             //Up
             case 'ArrowUp':
@@ -146,13 +152,18 @@ class Joueur extends EntiteDynamique {
                 break;
             //Right
             case 'ArrowRight':
-                if (!this.binBriqueDroite && (this.binBriqueBas || this.binDown))
+                if((!this.binBriqueDroite && (this.binBriqueBas || this.binDown)) || this.binBarre)
                     this.deplacer(VITESSE_JOUEUR * this.delta / 1000, 0);
-                this.tabEtatAnim = this.enumAnim.RUN_R;
-                this.binMoveRight = true;
+                if(this.binBarre)
+                    this.tabEtatAnim = this.enumAnim.CLIMB_R;
+                else
+                    this.tabEtatAnim = this.enumAnim.RUN_R;  
+                this.binMoveRight = true;                                        
                 break;
             //Down
             case 'ArrowDown':
+                if(this.binBarre)
+                    this.lastDescBarre = this.intPosY;
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
                     this.intPosX = Math.round(this.intPosX);
