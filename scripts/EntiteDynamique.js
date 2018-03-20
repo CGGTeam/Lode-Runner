@@ -65,10 +65,10 @@ class EntiteDynamique extends Dessinable{
         try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY + 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
         try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY - 1)][Math.ceil(this.intPosX)], comparateur);}catch(e){}
 
-        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
-        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 1)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.floor(this.intPosX + 0.5)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.floor(this.intPosX + 0.5)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.intPosY)][Math.ceil(this.intPosX - 0.5)], comparateur);}catch(e){}
+        try{tabObjCollisions.pushIfNotExist(objJeu.objNiveau.tabGrilleNiveau[Math.ceil(this.intPosY)][Math.ceil(this.intPosX - 0.5)], comparateur);}catch(e){}
 
         return tabObjCollisions;
     }
@@ -85,6 +85,7 @@ class EntiteDynamique extends Dessinable{
             if(value instanceof Echelle){
                 this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
                 this.binDown = (this.binDown || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY < value.intPosY));
+
             } else if( value instanceof Brique){
                 this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.25 && this.intPosY + 1 < value.intPosY + 0.25 ) && !value.binDetruit);
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
@@ -92,15 +93,18 @@ class EntiteDynamique extends Dessinable{
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1  && !value.binDetruit);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1)  && !value.binDetruit;
+
             } else if (value instanceof Bloc) {
+
                 this.binBriqueBas = (this.binBriqueBas || (this.intPosY + 1 > value.intPosY - 0.25 && this.intPosY + 1 < value.intPosY + 0.25 ));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.intPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.intPosX - 1 < value.intPosX + 0.3 && this.intPosX - 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1);
+
             }else if ( value instanceof Barre){
-                this.binBarre = true;
+                this.binBarre = (value.intPosY == Math.round(this.intPosY));
             }
         });
     }

@@ -75,7 +75,9 @@ class Joueur extends EntiteDynamique {
             console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         } else {
             this.lastDescBarre = null;
-            if(this.binFalling)
+            if(this.binFalling && this.binBarre)
+                this.tabEtatAnim = this.enumAnim.CLIMB_R
+            else if(this.binFalling)
                 this.tabEtatAnim = this.enumAnim.RUN_L;
             this.binFalling = false;
             if (this.objCaseCreusee) { 
@@ -161,7 +163,8 @@ class Joueur extends EntiteDynamique {
                 break;
             //Down
             case 'ArrowDown':
-                this.lastDescBarre = this.intPosY;
+                if(this.binBarre)
+                    this.lastDescBarre = this.intPosY;
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta/100)/10);
                     this.intPosX = Math.round(this.intPosX);
