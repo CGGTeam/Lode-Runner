@@ -63,7 +63,10 @@ class Niveau extends Dessinable{
       console.warn('Erreur de communication avec le serveur. Niveau par défaut utilisé');
       this.traiterFichier(this.strNiveauDefaut);
     })
-    .then(text => this.traiterFichier(text))
+    .then(text => {
+        this.traiterFichier(text);
+        Garde.setIntersections();
+      })
     .catch((err) => console.error(err));
   }
 
