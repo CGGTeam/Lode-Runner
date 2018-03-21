@@ -70,6 +70,7 @@ class Brique extends Case{
             this.tabEtatAnim = enumMapBrique.RESTORE;
             this.dblAnimFrame = 0;
         }
+        instanceMoteurSon.jouerSon(2, false, true);
     }
 
     /**

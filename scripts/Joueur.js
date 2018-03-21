@@ -54,6 +54,49 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
+        switch(this.tabEtatAnim){
+            case enumMapJoueur.FALL_R:
+                instanceMoteurSon.jouerSon(3, false);
+                break;
+            case enumMapJoueur.FALL_L:
+                instanceMoteurSon.jouerSon(3, false);
+                break;
+            case enumMapJoueur.CLIMB_R:
+                instanceMoteurSon.jouerSon(0, true);
+                break;
+            case enumMapJoueur.CLIMB_L:
+                instanceMoteurSon.jouerSon(0, true);
+                break;
+            case enumMapJoueur.CLIMB_U:
+                instanceMoteurSon.jouerSon(0, true);
+                break;
+            case enumMapJoueur.CLIMB_D:
+                instanceMoteurSon.jouerSon(0, true);
+                break;
+            case enumMapJoueur.DIG_R:
+                instanceMoteurSon.jouerSon(2, false);
+                break;
+            case enumMapJoueur.DIG_L:
+                instanceMoteurSon.jouerSon(2, false);
+                break;
+            case enumMapJoueur.RUN_L:
+                instanceMoteurSon.stopperSon(0);
+                instanceMoteurSon.stopperSon(3);
+                break;
+            case enumMapJoueur.RUN_R:
+                instanceMoteurSon.stopperSon(0);
+                instanceMoteurSon.stopperSon(3);
+                break;
+        }
+
+        if(!this.binFalling){
+            instanceMoteurSon.stopperSon(3);
+        }
+
+        //if(!this.binMoving){
+        //    instanceMoteurSon.stopperToutSon();
+        //}
+
         this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1 / 40;
         this.lastCalled = Date.now();
         if (this.binKeyDown && !this.binFalling) {
@@ -197,8 +240,7 @@ class Joueur extends EntiteDynamique {
             if (x instanceof Lingot) {
                 instanceMoteurSon.jouerSon(4);
                 objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
-                objJeu.objNiveau.score += 10;
-                objJeu.objNiveau.updateScore();
+                objJeu.ramasseLingot();
             }
         });
 

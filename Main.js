@@ -10,7 +10,6 @@ function apresInitSonEtWindowLoad() {
     objCanvas = document.getElementById('cvJeu');
     objC2D = objCanvas.getContext('2d');
     objJeu = new Jeu();
-    objScore = new Scoreboard(objCanvas, objC2D);
 }
 
 window.onload = function () {

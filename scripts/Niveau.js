@@ -43,7 +43,6 @@ class Niveau extends Dessinable{
     this.tabCasesImbrisables = [];
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
-    this.score = 0;
     this.tabGardes = [];
     this.strCouleurFond = 'black';
     this.lireFichierNiveau(strFichierNiveau);
@@ -81,7 +80,7 @@ class Niveau extends Dessinable{
    * 7: Garde
    * @param {String} strContenuFichier 
    */
-  traiterFichier (strContenuFichier) { 
+  traiterFichier (strContenuFichier) {
     let tabLignes = strContenuFichier.trim().split('\n');
     for (let i = 0; i < tabLignes.length; i++){
       this.tabGrilleNiveau.push([]);
@@ -108,10 +107,6 @@ class Niveau extends Dessinable{
         }
       }
     }
-  }
-
-  updateScore(){
-    objScore.currentScore = this.score;
   }
   
   /**
