@@ -45,20 +45,25 @@ class Brique extends Case{
             dblLargCase, dblHautCase * intHauteur,
             this.intPosX * dblLargCase, (this.intPosY - intHauteur + 1) * dblHautCase,
             dblLargCase, dblHautCase * intHauteur);
+
+        let intLength = (this.binDroite ? enumMapBrique.DESTROY_L : enumMapBrique.DESTROY_R).length;
+        
+        if (this.binEnDestruction && intFrameExact >= enumMapBrique.DESTROY_L.length - 1) {
+            this.binEnDestruction = false;
+            this.binDetruit = true;
+            this.intTimeoutID = window.setTimeout(() => this.restore(), 8000);
+        }
     }
     
     /**
      * Detruit le bloc. Celui-ci revient dans 8 secondes.
-     * @param {boolean} binDroite 
+     * @param {boolean} binDroite direction relative à la brique du joueur
      */
     detruire(binDroite) {
         this.dblAnimFrame = 0;
         this.tabEtatAnim = binDroite ? enumMapBrique.DESTROY_R : enumMapBrique.DESTROY_L;
-        this.intIDDestructionFinie = window.setTimeout(() => {
-            this.binEnDestruction = false; 
-            this.binDetruit = true;
-        }, this.tabEtatAnim.length / FPS_ANIM_BRIQUE / 60 * 1000);
-        this.intTimeoutID = window.setTimeout(() => this.restore(), 8000);
+        this.binEnDestruction = true;
+        this.binDetruit = false;
     }
 
     /**
