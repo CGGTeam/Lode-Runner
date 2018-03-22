@@ -22,4 +22,6 @@ class Case extends Dessinable {
     updateNav(tabGrilleNiveau) {
         throw 'updateNav() non implémenté';
     }
+
+    updateSpawn(tabGrille, mapSpawn){}
 }

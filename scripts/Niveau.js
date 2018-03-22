@@ -47,7 +47,9 @@ class Niveau extends Dessinable{
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
     this.tabGardes = [];
+    this.mapSpawn = new Map();
     this.tabGardes.length = intNiveau + 2;
+    console.log(this.tabGardes.length);
     this.strCouleurFond = 'black';
     this.binEchelleFin = false;
     this.dblCompteurEchelle = 0;
@@ -106,17 +108,20 @@ class Niveau extends Dessinable{
           if (intNbLu == 6) {
             this.objJoueur = objCase;
           }else if(intNbLu == 7){
-            this.tabGardes.push(objCase);
-          }
-          else{
+            // this.tabGardes.push(objCase);
+          } else{
               this.tabGrilleNiveau[i][j] = objCase;
               objCase.updateNav(this.tabGrilleNav);
+              objCase.updateSpawn(this.tabGrilleNiveau, this.mapSpawn);
           }
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
       }
     }
+
+    this.mapSpawn.delete(Math.round(this.objJoueur.intPosY));
+    this.initGardes();
   }
   
   /**
@@ -162,5 +167,24 @@ class Niveau extends Dessinable{
         this.tabGrilleNiveau[intCompteurExact][INT_POS_X_ECHELLE_FIN] = new Echelle(INT_POS_X_ECHELLE_FIN, intCompteurExact);
       }
     }
-  }    
+  }
+  
+  initGardes() {
+    for (let i = 0; i < this.tabGardes.length; i++) {
+      this.tabGardes[i] = this.genererGarde();
+    }
+  }
+
+  genererGarde() {
+    let itMap = this.mapSpawn.entries();
+    let intPositionY = Math.floor(Math.random() * this.mapSpawn.size);
+    for (let i = 0; i < intPositionY - 1; i++){
+      itMap.next();
+    }
+    let tabBonneEntree = itMap.next().value;
+    let intY = tabBonneEntree[0];
+    let tabXPoss = tabBonneEntree[1];
+    let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1);
+    return new Garde(intX, intY);
+  }
 }
