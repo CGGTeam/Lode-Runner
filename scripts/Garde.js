@@ -15,11 +15,24 @@ class Garde extends EntiteDynamique{
     constructor(posInitX, posInitY, intNbGarde) {
         super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard' + intNbGarde + '.png'));
         this.dblAnimFrame = 0;
+        this.pathToPlayer = null;
     }
 
     pathFinding(){
-        let startPath = new Path(this.dblPosX, this.dblPosY, 1, 0);
-        console.log(this.nextPaths(startPath));
+        let currentPaths = [new Path(this.dblPosX, this.dblPosY, 1, 0),new Path(this.dblPosX, this.dblPosY, -1, 0)];
+        //while(!this.pathToPlayer){
+            this.pathToPlayer = null;
+            for(let i = 0; i < currentPaths.length && !this.pathToPlayer; i++){
+                let tempoPaths = this.nextPaths(currentPaths[i]);
+                if(tempoPaths){
+                    currentPaths = currentPaths.concat(tempoPaths);
+                }else{
+                    currentPaths.splice(i, 1);
+                }
+           // }
+            console.log(currentPaths);
+        }
+        console.log(this.pathToPlayer);
     }
 
 /**
@@ -28,10 +41,14 @@ class Garde extends EntiteDynamique{
  */
     nextPaths(path){
         let binAccessible = true;
-        while(binAccessible && !Garde.tabIntersections[path.lastPosY][path.lastPosX]){
+        while(binAccessible && !Garde.tabIntersections[path.lastPosY][path.lastPosX] && !this.pathToPlayer){
             path.addPosition(path.lastPosX + path.horizontal, path.lastPosY + path.vertical)
             binAccessible = path.lastPosY < Garde.tabIntersections.length && path.lastPosX < Garde.tabIntersections[0].length 
                 && objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosX];
+            if(objJeu.objNiveau.objJoueur.dblPosX < path.lastPosX + 0.5 && objJeu.objNiveau.objJoueur.dblPosX > path.lastPosX - 0.5
+                && objJeu.objNiveau.objJoueur.dblPosY < path.lastPosY + 0.25 && objJeu.objNiveau.objJoueur.dblPosY > path.lastPosY - 0.25){
+                    this.pathToPlayer = path;
+                }
         }
         
         if(binAccessible){
@@ -61,7 +78,7 @@ class Garde extends EntiteDynamique{
             //Right
             if(objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosY+1]){
                 tempo = Object.assign({},path);
-                tempo.vertical = -1;
+                tempo.vertical = 0;
                 tempo.horizontal = 1;
                 tabRetour.push(tempo);
             }

@@ -13,6 +13,12 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
     }
 };
 
+Array.prototype.pushIfNoNull = function(element){
+    if(element !== null){
+        this.push(element);
+    }
+}
+
 function preloadImage(strUrl) {
     var objImage = new Image();
     objImage.src = strUrl;

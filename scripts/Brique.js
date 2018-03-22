@@ -23,7 +23,7 @@ class Brique extends Case{
     }
 
     updateNav(tabGrilleNav, tabGrilleNiveau) {
-        if (this.intPosY > 0 && !tabGrilleNiveau[this.intPosY - 1][this.intPosX]) {
+        if (this.intPosY > 0 && (!tabGrilleNiveau[this.intPosY - 1][this.intPosX] || tabGrilleNiveau[this.intPosY - 1][this.intPosX] instanceof Lingot)) {
             tabGrilleNav[this.intPosY - 1][this.intPosX] = true;                    
         }
     }
