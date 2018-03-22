@@ -3,46 +3,46 @@
 class Jeu {
     constructor() {
         //initAnimation
-        objScore = this.scoreBoard;
-        this.score = 0;
-        this.vies = 5;
-        this.niveau = 1;
-        this.numLingots = 6;
-        this.scoreBoard = new Scoreboard(objCanvas, objC2D, 0, this.vies, this.niveau);
+        objScore = this.objScoreBoard;
+        this.intScore = 0;
+        this.intVies = 5;
+        this.objNiveau = 1;
+        this.intNumLingots = 6;
+        this.objScoreBoard = new Scoreboard(objCanvas, objC2D, 0, this.intVies, this.objNiveau);
         this.creerNiveau();
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
     creerNiveau() {
-        this.objNiveau = new Niveau('niv1.txt', this.niveau);
+        this.objNiveau = new Niveau('niv1.txt', this.objNiveau);
     }
 
     ramasseLingot(){
-        this.score += 250;
-        this.numLingots -= 1;
+        this.intScore += 250;
+        this.intNumLingots -= 1;
         this.updateScore();
-        if(this.numLingots === 0){
+        if(this.intNumLingots === 0){
             this.objNiveau.binEchelleFin = true;
         }
     }
 
     updateScore(){
-        this.scoreBoard.currentScore = this.score;
+        this.objScoreBoard.currentScore = this.intScore;
     }
 
     prochainNiveau(){
         instanceMoteurSon.stopperToutSon();
         instanceMoteurSon.jouerSon(5);
-        this.score += 1500;
+        this.intScore += 1500;
         this.updateScore();
-        this.niveau += 1;
-        this.scoreBoard.currentLevel = this.niveau;
+        this.objNiveau += 1;
+        this.objScoreBoard.currentLevel = this.objNiveau;
         this.creerNiveau();
     }
 
     updateVies(){
-        this.scoreBoard.currentLives = this.vies;
-        if(this.vies === 0){
+        this.objScoreBoard.currentLives = this.intVies;
+        if(this.intVies === 0){
             this.gameOver();
         }
     }
@@ -56,7 +56,7 @@ class Jeu {
         this.effacerEcran();
         this.mettreAJourAnimation();
         this.dessiner();
-        this.scoreBoard.ctxDrawScoreboard();
+        this.objScoreBoard.ctxDrawScoreboard();
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 

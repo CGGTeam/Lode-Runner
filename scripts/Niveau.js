@@ -162,6 +162,10 @@ class Niveau extends Dessinable{
     }
   }
   
+  /**
+   * Créé le bon nombre de gardes selon le niveau
+   * @param {Map<number, Array<number>>} mapSpawn 
+   */
   initGardes(mapSpawn) {
     for (let i = 0; i < this.tabGardes.length; i++) {
       this.tabGardes[i] = this.genererGarde(mapSpawn, i);
