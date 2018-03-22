@@ -1,10 +1,13 @@
+const DBL_VIT_ECHELLE_FIN = 0.02;
+const INT_POS_X_ECHELLE_FIN = 18;
+
 class Niveau extends Dessinable{
   /**
    * Initialise un niveau à partir de fichierNiveau. Ce fichier
    * est cherché par défaut à l'adresse suivante: 
    * @param {String} strFichierNiveau 
    */
-  constructor(strFichierNiveau) {
+  constructor(strFichierNiveau, intNiveau) {
     super();
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
     this.strNiveauDefaut =
@@ -44,7 +47,11 @@ class Niveau extends Dessinable{
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
     this.tabGardes = [];
+    this.tabGardes.length = intNiveau + 2;
     this.strCouleurFond = 'black';
+    this.binEchelleFin = false;
+    this.dblCompteurEchelle = 0;
+    this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
     console.log(this.tabGrilleNav);
     console.log(this.tabGrilleNiveau)
@@ -138,6 +145,19 @@ class Niveau extends Dessinable{
   mettreAJourAnimation() {
     this.tabGrilleNiveau.forEach(l => l.forEach(c => { if (c) c.mettreAJourAnimation() }));
     if(this.objJoueur) this.objJoueur.mettreAJourAnimation();
-    this.tabGardes.forEach(obj => obj.mettreAJourAnimation());  
+    this.tabGardes.forEach(obj => obj.mettreAJourAnimation());
+    
+    if (this.binEchelleFin) {
+      this.dblCompteurEchelle += DBL_VIT_ECHELLE_FIN;
+      if (this.dblCompteurEchelle >= this.intLongueurEchelle) {
+        this.dblCompteurEchelle = this.intLongueurEchelle - 1;
+      }
+
+      let intCompteurExact = Math.floor(this.dblCompteurEchelle);
+      if (!this.tabGrilleNiveau[intCompteurExact][INT_POS_X_ECHELLE_FIN]) {
+        instanceMoteurSon.jouerSon(1);
+        this.tabGrilleNiveau[intCompteurExact][INT_POS_X_ECHELLE_FIN] = new Echelle(INT_POS_X_ECHELLE_FIN, intCompteurExact);
+      }
+    }
   }    
 }

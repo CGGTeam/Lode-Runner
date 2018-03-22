@@ -56,6 +56,10 @@ class Joueur extends EntiteDynamique {
     }
 
     mettreAJourAnimation() {
+        if (this.intPosY <= 0) {
+            objJeu.prochainNiveau();
+        }
+        
         let binChange = false;
         if (this.tabEtatAnimPrev != this.tabEtatAnim) {
             this.tabEtatAnimPrev = this.tabEtatAnim;
@@ -244,6 +248,5 @@ class Joueur extends EntiteDynamique {
                 objJeu.ramasseLingot();
             }
         });
-
     }
 }
