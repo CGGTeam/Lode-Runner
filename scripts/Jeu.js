@@ -5,16 +5,16 @@ class Jeu {
         //initAnimation
         objScore = this.scoreBoard;
         this.score = 0;
-        this.vies = 3;
+        this.vies = 5;
         this.niveau = 1;
         this.numLingots = 6;
         this.scoreBoard = new Scoreboard(objCanvas, objC2D, 0, this.vies, this.niveau);
-        this.initialiserObjets();
+        this.creerNiveau();
         window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
-    initialiserObjets() {
-        this.objNiveau = new Niveau('niv1.txt');
+    creerNiveau() {
+        this.objNiveau = new Niveau('niv1.txt', this.niveau);
     }
 
     ramasseLingot(){
@@ -22,29 +22,25 @@ class Jeu {
         this.numLingots -= 1;
         this.updateScore();
         if(this.numLingots === 0){
-            this.prochainNiveau()
+            this.objNiveau.binEchelleFin = true;
         }
     }
 
     updateScore(){
-        console.log('UpdateScore: ');
-        console.log('previous: ' + this.scoreBoard.currentScore);
-        console.log('current: ' + this.score);
         this.scoreBoard.currentScore = this.score;
     }
 
     prochainNiveau(){
-        console.log('next level');
+        instanceMoteurSon.stopperToutSon();
         instanceMoteurSon.jouerSon(5);
         this.score += 1500;
         this.updateScore();
         this.niveau += 1;
         this.scoreBoard.currentLevel = this.niveau;
-        this.initialiserObjets();
+        this.creerNiveau();
     }
 
     updateVies(){
-        console.log('update vies');
         this.scoreBoard.currentLives = this.vies;
         if(this.vies === 0){
             this.gameOver();

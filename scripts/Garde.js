@@ -12,8 +12,8 @@ const enumGardeMap = Object.freeze({
 
 class Garde extends EntiteDynamique{
 
-    constructor(posInitX, posInitY) {
-        super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard0.png'));
+    constructor(posInitX, posInitY, intNbGarde) {
+        super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard' + intNbGarde + '.png'));
         this.dblAnimFrame = 0;
         this.pathFinding();
     }

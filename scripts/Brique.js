@@ -22,8 +22,8 @@ class Brique extends Case{
         this.intTimeoutID = null;
     }
 
-    updateNav(tabGrilleNav) {
-        if (this.intPosY > 0) {
+    updateNav(tabGrilleNav, tabGrilleNiveau) {
+        if (this.intPosY > 0 && !tabGrilleNiveau[this.intPosY - 1][this.intPosX]) {
             tabGrilleNav[this.intPosY - 1][this.intPosX] = true;                    
         }
     }
@@ -82,8 +82,23 @@ class Brique extends Case{
      * Interrompt la destruction du bloc
      */
     interrompreDestruction () {
+        instanceMoteurSon.stopperSon(2);
         window.clearTimeout(this.intTimeoutID);
         this.tabEtatAnim = enumMapBrique.RESTORE;
         this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
+    }
+
+    /**
+     * Vérifie si un garde peut apparaître au-dessus de ce bloc
+     * @param {Array<Case>} tabGrille 
+     * @param {Map<number, Array<number>>} mapSpawn 
+     */
+    updateSpawn(tabGrille, mapSpawn){
+        if (!tabGrille[this.intPosY - 1][this.intPosX]) {
+            if (!mapSpawn.has(this.intPosY - 1)) {
+                mapSpawn.set(this.intPosY - 1, []);
+            }
+            mapSpawn.get(this.intPosY - 1).push(this.intPosX);  
+        }
     }
 }
