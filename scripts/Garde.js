@@ -19,19 +19,26 @@ class Garde extends EntiteDynamique{
     }
 
     mettreAJourAnimation () {
-        let dblBorneG = this.dblPosX - 10;
-        let dblBorneD = this.dblPosX + 10;
-        let dblXJoueur = objJeu.objNiveau.objJoueur.dblPosX;
-        let binTouchX = dblXJoueur >= dblBorneG && dblXJoueur <= dblBorneD;
-        
-        let dblBorneH = this.dblPosY - 11;
-        let dblBorneB = this.dblPosY + 11;
-        let dblYJoueur = objJeu.objNiveau.objJoueur.dblPosY;
-        let binTouchY = dblYJoueur >= dblBorneH && dblXJoueur <= dblBorneB;
+        try {
+            let dblBorneG = this.dblPosX - 0.5;
+            let dblBorneD = this.dblPosX + 0.5;
+            let dblXJoueur = objJeu.objNiveau.objJoueur.dblPosX;
+            let binTouchX = dblXJoueur >= dblBorneG && dblXJoueur <= dblBorneD;
+            
+            let dblBorneH = this.dblPosY - 0.5;
+            let dblBorneB = this.dblPosY + 0.5;
+            let dblYJoueur = objJeu.objNiveau.objJoueur.dblPosY;
+            let binTouchY = dblYJoueur >= dblBorneH && dblYJoueur <= dblBorneB;
+            // console.log(dblBorneG, dblBorneD, dblXJoueur)
+            // console.log(dblBorneH, dblBorneB, dblYJoueur)
 
-        if (binTouchX && binTouchY) {
-            objJeu.objNiveau.objJoueur.mourir();
+            if (binTouchX && binTouchY) {
+                objJeu.objNiveau.objJoueur.mourir();
+            }
+        } catch (e) {
+            console.warn('MICHAEL IS WACK')
         }
+        
     }
 
     pathFinding(){
