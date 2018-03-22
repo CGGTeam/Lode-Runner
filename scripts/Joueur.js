@@ -22,7 +22,6 @@ class Joueur extends EntiteDynamique {
 
     constructor(posInitX, posInitY) {
         super(posInitX, posInitY, enumMapJoueur, preloadImage('./assets/img/runner.png'));
-        console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         this.score = 0;
         document.addEventListener('keydown', (event) => {
             switch (event.key) {
@@ -73,9 +72,6 @@ class Joueur extends EntiteDynamique {
         } else {
             //this.lastCalled = null;
         }
-        if (this.objCaseCreusee) {
-            // console.log(this.objCaseCreusee.binDetruit);
-        }
 
         this.setColBin();
 
@@ -122,7 +118,6 @@ class Joueur extends EntiteDynamique {
             this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
             this.tabEtatAnim = this.binMoveRight ?
                 this.enumAnim.FALL_R : this.enumAnim.FALL_L;
-            // console.log('JOUEUR X: ' + this.intPosX + ' Y: ' + this.intPosY);
         } else {
             this.lastDescBarre = null;
             if(this.binFalling && this.binBarre)
@@ -168,11 +163,6 @@ class Joueur extends EntiteDynamique {
      * Appele a chaque frame de mouvement
      */
     joueurOnKeyDown() {
-
-        //this.setColBin();
-        //DEBUG GAME
-        // console.log([this.binBriqueBas, this.binBriqueHaut, this.binBriqueGauche, this.binBriqueDroite]);
-
         switch (this.presentKey) {
             //Left
             case 'ArrowLeft':
@@ -187,7 +177,6 @@ class Joueur extends EntiteDynamique {
             //Up
             case 'ArrowUp':
                 if (this.binUp) {
-                    // console.log(-Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
                     this.intPosX = Math.round(this.intPosX);
                     this.deplacer(0, -Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
                     this.tabEtatAnim = this.enumAnim.CLIMB_U;

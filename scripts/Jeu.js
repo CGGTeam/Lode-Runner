@@ -27,14 +27,10 @@ class Jeu {
     }
 
     updateScore(){
-        console.log('UpdateScore: ');
-        console.log('previous: ' + this.scoreBoard.currentScore);
-        console.log('current: ' + this.score);
         this.scoreBoard.currentScore = this.score;
     }
 
     prochainNiveau(){
-        console.log('next level');
         instanceMoteurSon.stopperToutSon();
         instanceMoteurSon.jouerSon(5);
         this.score += 1500;
@@ -45,7 +41,6 @@ class Jeu {
     }
 
     updateVies(){
-        console.log('update vies');
         this.scoreBoard.currentLives = this.vies;
         if(this.vies === 0){
             this.gameOver();

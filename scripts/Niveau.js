@@ -12,7 +12,7 @@ class Niveau extends Dessinable{
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
     this.strNiveauDefaut =
     '0000000000000000000000000000\n' +
-    '0000400007000000000000000000\n' +
+    '0000400000000000000000000000\n' +
     '1111111211111110000000000000\n' +
     '0000000233333333330000040000\n' +
     '0000000200001120001111111211\n' +
@@ -36,8 +36,7 @@ class Niveau extends Dessinable{
       Barre.prototype.constructor,
       Lingot.prototype.constructor,
       Bloc.prototype.constructor,
-      Joueur.prototype.constructor,
-      Garde.prototype.constructor
+      Joueur.prototype.constructor
     ];
 
     this.tabBlocs = [];
@@ -48,7 +47,6 @@ class Niveau extends Dessinable{
     this.tabGrilleNav = [];
     this.tabGardes = [];
     this.tabGardes.length = intNiveau + 2;
-    console.log(this.tabGardes.length);
     this.strCouleurFond = 'black';
     this.binEchelleFin = false;
     this.dblCompteurEchelle = 0;
@@ -108,9 +106,7 @@ class Niveau extends Dessinable{
           
           if (intNbLu == 6) {
             this.objJoueur = objCase;
-          }else if(intNbLu == 7){
-            // this.tabGardes.push(objCase);
-          } else{
+          } else {
               this.tabGrilleNiveau[i][j] = objCase;
               objCase.updateNav(this.tabGrilleNav);
               objCase.updateSpawn(this.tabGrilleNiveau, mapSpawn);
@@ -121,7 +117,6 @@ class Niveau extends Dessinable{
       }
     }
 
-    console.log(mapSpawn);
     mapSpawn.delete(Math.round(this.objJoueur.intPosY));
     this.initGardes(mapSpawn);
   }
@@ -173,22 +168,20 @@ class Niveau extends Dessinable{
   
   initGardes(mapSpawn) {
     for (let i = 0; i < this.tabGardes.length; i++) {
-      this.tabGardes[i] = this.genererGarde(mapSpawn);
+      this.tabGardes[i] = this.genererGarde(mapSpawn, i);
     }
   }
 
-  genererGarde(mapSpawn) {
+  genererGarde(mapSpawn, intNbGarde) {
     let itMap = mapSpawn.entries();
     let intPositionY = Math.floor(Math.random() * (mapSpawn.size + 1));
     for (let i = 0; i < intPositionY - 1; i++){
       itMap.next();
     }
     let tabBonneEntree = itMap.next().value;
-    console.log(tabBonneEntree);
     let intY = tabBonneEntree[0];
     let tabXPoss = tabBonneEntree[1];
     let intX = tabXPoss.splice(Math.floor(Math.random() * (tabXPoss.length + 1)), 1)[0];
-    console.log(intX, intY);
-    return new Garde(intX, intY);
+    return new Garde(intX, intY, intNbGarde);
   }
 }
