@@ -15,11 +15,10 @@ class Garde extends EntiteDynamique{
     constructor(posInitX, posInitY, intNbGarde) {
         super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard' + intNbGarde + '.png'));
         this.dblAnimFrame = 0;
-        this.pathFinding();
     }
 
     pathFinding(){
-        let startPath = new Path(this.intPosX, this.intPosY, 0, -1);
+        let startPath = new Path(this.dblPosX, this.dblPosY, 1, 0);
         console.log(this.nextPaths(startPath));
     }
 
@@ -34,32 +33,33 @@ class Garde extends EntiteDynamique{
             binAccessible = path.lastPosY < Garde.tabIntersections.length && path.lastPosX < Garde.tabIntersections[0].length 
                 && objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosX];
         }
+        
         if(binAccessible){
             let tabRetour = [];
             let tempo;
             //Up
-            if(objJeu.objNiveau.tabGrilleNav[i-1][j]){
+            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY-1][path.lastPosX]){
                 tempo = Object.assign({},path);
                 tempo.vertical = -1;
                 tempo.horizontal = 0;
                 tabRetour.push(tempo);
             }
             //Down
-            if(objJeu.objNiveau.tabGrilleNav[i+1][j]){
+            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY+1][path.lastPosX]){
                 tempo = Object.assign({},path);
                 tempo.vertical = 1;
                 tempo.horizontal = 0;
                 tabRetour.push(tempo);
             }
             //Left
-            if(objJeu.objNiveau.tabGrilleNav[i][j-1]){
+            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosX-1]){
                 tempo = Object.assign({},path);
                 tempo.vertical = 0;
                 tempo.horizontal = -1;
                 tabRetour.push(tempo);
             }
             //Right
-            if(objJeu.objNiveau.tabGrilleNav[i][j+1]){
+            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosY+1]){
                 tempo = Object.assign({},path);
                 tempo.vertical = -1;
                 tempo.horizontal = 1;
@@ -67,7 +67,9 @@ class Garde extends EntiteDynamique{
             }
             
             return tabRetour;
+            
         }else{
+            
             return null;
         }
     }
@@ -82,8 +84,6 @@ class Garde extends EntiteDynamique{
                         (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Brique && 
                             (objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Echelle || 
                             objJeu.objNiveau.tabGrilleNiveau[i - 1][j] instanceof Echelle || 
-                            objJeu.objNiveau.tabGrilleNiveau[i][j + 1] instanceof Echelle ||
-                            objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Echelle ||
                             objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Barre ||
                             objJeu.objNiveau.tabGrilleNiveau[i][j + 1] instanceof Barre ||
                             objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Barre)
@@ -93,10 +93,18 @@ class Garde extends EntiteDynamique{
                             objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Barre)) ||
 
                             (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Echelle &&
-                            !objJeu.objNiveau.tabGrilleNiveau[i - 1][j])
+                            !objJeu.objNiveau.tabGrilleNiveau[i][j])
                     );
+                    if(Garde.tabIntersections[i][j]){
+                        objC2D.save();
+                        objC2D.fillStyle = "#FF0000";
+                        //console.log(objC2D.fillStyle);
+                        objC2D.fillRect(j * dblLargCase, i * dblHautCase, 5, 5);
+                        //objC2D.fill();
+                        objC2D.restore();
+                    }
         }
         }
-        console.log(Garde.tabIntersections);
+        //console.log(Garde.tabIntersections);
     }
 }
