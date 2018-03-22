@@ -5,7 +5,7 @@ class Jeu {
         //initAnimation
         objScore = this.objScoreBoard;
         this.intScore = 0;
-        this.intVies = 5;
+        this.intVies = 1;
         this.intNiveau = 0;
         this.objScoreBoard = new Scoreboard(objCanvas, objC2D, 0, this.intVies, this.intNiveau);
         this.creerNiveau();
@@ -34,14 +34,18 @@ class Jeu {
         instanceMoteurSon.jouerSon(5);
         this.intScore += 1500;
         this.updateScore();
-        this.intNiveau ++;
+        this.intNiveau++;
         this.intNiveau = Math.min(10, this.intNiveau);
-        this.objScoreBoard.currentLevel = this.intNiveau;
+        this.updateNiveau();
         this.creerNiveau();
     }
 
+    updateNiveau(){
+        this.objScoreBoard.currentLevel = this.intNiveau;
+    }
+
     jouerMort(){
-        this.vies -= 1;
+        this.intVies --;
         this.updateVies();
         this.creerNiveau();
     }
@@ -56,18 +60,38 @@ class Jeu {
     }
 
     gameOver(){
+        window.cancelAnimationFrame(this.animationHandle);
+        this.intScore = 0;
+        this.intVies = 5;
+        this.intNiveau = 0;
         //Jouer son: (fall)
+        instanceMoteurSon.jouerSon(3);
         //DrawText (Game Over, Try Again? [yes] [no])
-        //Reset stats
-        this.creerNiveau(); //tempo
+        objC2D.save();
+        objC2D.fillStyle = "red";
+        objC2D.font = "Lode";
+        objC2D.translate(objCanvas.width/2, objCanvas.height/2);
+        objC2D.fillRect(-50,-30,100,60);
+        objC2D.scale(0,2);
+        objC2D.fillText("GAME OVER", -20, -10);
+        objC2D.fillText("Try Again?", -20, 10);
+        objC2D.restore();
+
+        window.addEventListener("onKeyDown", (e) => {
+            //Reset stats, restart game
+            if(e.keyCode === "Enter"){
+                this.updateVies();
+                this.updateScore();
+            }
+        });
     }
 
     bouclePrincipale () {
+        this.animationHandle = window.requestAnimationFrame(() => this.bouclePrincipale());
         this.effacerEcran();
         this.mettreAJourAnimation();
         this.dessiner();
         this.objScoreBoard.ctxDrawScoreboard();
-        window.requestAnimationFrame(() => this.bouclePrincipale());
     }
 
     effacerEcran() {

@@ -19,7 +19,7 @@ class EntiteDynamique extends Dessinable{
     }
 
     dessiner() {
-        let intFrameExact = Math.floor(this.dblAnimFrame)
+        let intFrameExact = Math.floor(this.dblAnimFrame);
         objC2D.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
                          dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
                          this.dblPosX * dblLargCase, this.dblPosY * dblHautCase, dblHautCase, dblLargCase, dblHautCase);
