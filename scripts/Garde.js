@@ -15,6 +15,61 @@ class Garde extends EntiteDynamique{
     constructor(posInitX, posInitY) {
         super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard0.png'));
         this.dblAnimFrame = 0;
+        this.pathFinding();
+    }
+
+    pathFinding(){
+        let startPath = new Path(this.intPosX, this.intPosY, 0, -1);
+        console.log(this.nextPaths(startPath));
+    }
+
+/**
+ * 
+ * @param {Path} path 
+ */
+    nextPaths(path){
+        let binAccessible = true;
+        while(binAccessible && !Garde.tabIntersections[path.lastPosY][path.lastPosX]){
+            path.addPosition(path.lastPosX + path.horizontal, path.lastPosY + path.vertical)
+            binAccessible = path.lastPosY < Garde.tabIntersections.length && path.lastPosX < Garde.tabIntersections[0].length 
+                && objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosX];
+        }
+        if(binAccessible){
+            let tabRetour = [];
+            let tempo;
+            //Up
+            if(objJeu.objNiveau.tabGrilleNav[i-1][j]){
+                tempo = Object.assign({},path);
+                tempo.vertical = -1;
+                tempo.horizontal = 0;
+                tabRetour.push(tempo);
+            }
+            //Down
+            if(objJeu.objNiveau.tabGrilleNav[i+1][j]){
+                tempo = Object.assign({},path);
+                tempo.vertical = 1;
+                tempo.horizontal = 0;
+                tabRetour.push(tempo);
+            }
+            //Left
+            if(objJeu.objNiveau.tabGrilleNav[i][j-1]){
+                tempo = Object.assign({},path);
+                tempo.vertical = 0;
+                tempo.horizontal = -1;
+                tabRetour.push(tempo);
+            }
+            //Right
+            if(objJeu.objNiveau.tabGrilleNav[i][j+1]){
+                tempo = Object.assign({},path);
+                tempo.vertical = -1;
+                tempo.horizontal = 1;
+                tabRetour.push(tempo);
+            }
+            
+            return tabRetour;
+        }else{
+            return null;
+        }
     }
 
     static setIntersections(params) {
@@ -22,7 +77,7 @@ class Garde extends EntiteDynamique{
         for(let i = 0; i < objJeu.objNiveau.tabGrilleNiveau.length; i++){
             Garde.tabIntersections[i] = [];
             for(let j = 0; j < objJeu.objNiveau.tabGrilleNiveau[i].length; j++){
-                Garde.tabIntersections[i][j] =
+                Garde.tabIntersections[i][j] = 
                     objJeu.objNiveau.tabGrilleNav[i][j] && (
                         (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Brique && 
                             (objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Echelle || 
