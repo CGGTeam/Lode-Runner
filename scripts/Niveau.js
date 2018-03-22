@@ -47,7 +47,6 @@ class Niveau extends Dessinable{
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
     this.tabGardes = [];
-    this.mapSpawn = new Map();
     this.tabGardes.length = intNiveau + 2;
     console.log(this.tabGardes.length);
     this.strCouleurFond = 'black';
@@ -93,6 +92,8 @@ class Niveau extends Dessinable{
    * @param {String} strContenuFichier 
    */
   traiterFichier (strContenuFichier) {
+    let mapSpawn = new Map();
+    
     let tabLignes = strContenuFichier.trim().split('\n');
     for (let i = 0; i < tabLignes.length; i++){
       this.tabGrilleNiveau.push([]);
@@ -112,7 +113,7 @@ class Niveau extends Dessinable{
           } else{
               this.tabGrilleNiveau[i][j] = objCase;
               objCase.updateNav(this.tabGrilleNav);
-              objCase.updateSpawn(this.tabGrilleNiveau, this.mapSpawn);
+              objCase.updateSpawn(this.tabGrilleNiveau, mapSpawn);
           }
         } else {
           this.tabGrilleNiveau[i].push(null);
@@ -120,8 +121,9 @@ class Niveau extends Dessinable{
       }
     }
 
-    this.mapSpawn.delete(Math.round(this.objJoueur.intPosY));
-    this.initGardes();
+    console.log(mapSpawn);
+    mapSpawn.delete(Math.round(this.objJoueur.intPosY));
+    this.initGardes(mapSpawn);
   }
   
   /**
@@ -169,22 +171,24 @@ class Niveau extends Dessinable{
     }
   }
   
-  initGardes() {
+  initGardes(mapSpawn) {
     for (let i = 0; i < this.tabGardes.length; i++) {
-      this.tabGardes[i] = this.genererGarde();
+      this.tabGardes[i] = this.genererGarde(mapSpawn);
     }
   }
 
-  genererGarde() {
-    let itMap = this.mapSpawn.entries();
-    let intPositionY = Math.floor(Math.random() * this.mapSpawn.size);
+  genererGarde(mapSpawn) {
+    let itMap = mapSpawn.entries();
+    let intPositionY = Math.floor(Math.random() * (mapSpawn.size + 1));
     for (let i = 0; i < intPositionY - 1; i++){
       itMap.next();
     }
     let tabBonneEntree = itMap.next().value;
+    console.log(tabBonneEntree);
     let intY = tabBonneEntree[0];
     let tabXPoss = tabBonneEntree[1];
-    let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1);
+    let intX = tabXPoss.splice(Math.floor(Math.random() * (tabXPoss.length + 1)), 1)[0];
+    console.log(intX, intY);
     return new Garde(intX, intY);
   }
 }
