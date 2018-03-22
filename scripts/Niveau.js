@@ -4,7 +4,7 @@ const INT_POS_X_ECHELLE_FIN = 18;
 class Niveau extends Dessinable{
   /**
    * Initialise un niveau à partir de fichierNiveau. Ce fichier
-   * est cherché par défaut à l'adresse suivante: 
+   * est cherché par défaut à l'adresse suivante: http://www.antoinebl.com/Lode-Runner/assets/maps/
    * @param {String} strFichierNiveau 
    */
   constructor(strFichierNiveau, intNiveau) {
@@ -12,7 +12,7 @@ class Niveau extends Dessinable{
     //Ceci est la valeur par défaut qui est utilisée s'il n'y a pas de connexion Internet
     this.strNiveauDefaut =
     '0000000000000000000000000000\n' +
-    '0000400007000000000000000000\n' +
+    '0000400000000000000000000000\n' +
     '1111111211111110000000000000\n' +
     '0000000233333333330000040000\n' +
     '0000000200001120001111111211\n' +
@@ -36,8 +36,7 @@ class Niveau extends Dessinable{
       Barre.prototype.constructor,
       Lingot.prototype.constructor,
       Bloc.prototype.constructor,
-      Joueur.prototype.constructor,
-      Garde.prototype.constructor
+      Joueur.prototype.constructor
     ];
 
     this.tabBlocs = [];
@@ -47,14 +46,16 @@ class Niveau extends Dessinable{
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
     this.tabGardes = [];
-    this.tabGardes.length = intNiveau + 2;
+    this.tabGardes.length = intNiveau + 3;
     this.strCouleurFond = 'black';
     this.binEchelleFin = false;
+    this.intNbLingots = 0;
     this.dblCompteurEchelle = 0;
     this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
     console.log(this.tabGrilleNav);
-    console.log(this.tabGrilleNiveau)
+    console.log(this.tabGrilleNiveau);
+    Garde.tabIntersections = [];
   }
   
   /**
@@ -72,7 +73,6 @@ class Niveau extends Dessinable{
     })
     .then(text => {
         this.traiterFichier(text);
-        Garde.setIntersections();
       })
     .catch((err) => console.error(err));
   }
@@ -91,6 +91,8 @@ class Niveau extends Dessinable{
    * @param {String} strContenuFichier 
    */
   traiterFichier (strContenuFichier) {
+    let mapSpawn = new Map();
+    
     let tabLignes = strContenuFichier.trim().split('\n');
     for (let i = 0; i < tabLignes.length; i++){
       this.tabGrilleNiveau.push([]);
@@ -103,32 +105,34 @@ class Niveau extends Dessinable{
           let fctFactory = objCtor.bind(objCtor, j, i);
           let objCase = new fctFactory();
           
-          if (intNbLu == 6) {
-            this.objJoueur = objCase;
-          }else if(intNbLu == 7){
-            this.tabGardes.push(objCase);
+          if (intNbLu == 4) { // est un lingot
+            this.intNbLingots++;
           }
-          else{
+          
+
+          if (intNbLu == 6) { // est une case imbrisable
+            this.objJoueur = objCase;
+          } else {
               this.tabGrilleNiveau[i][j] = objCase;
-              objCase.updateNav(this.tabGrilleNav);
+              objCase.updateNav(this.tabGrilleNav, this.tabGrilleNiveau);
+              objCase.updateSpawn(this.tabGrilleNiveau, mapSpawn);
           }
         } else {
           this.tabGrilleNiveau[i].push(null);
         }
       }
     }
+
+    mapSpawn.delete(Math.round(this.objJoueur.intPosY));
+    this.initGardes(mapSpawn);
   }
   
   /**
    * Déssine les cases, puis les gardes et le joueur
    */
   dessiner () {
-    //objC2D.save();
     objC2D.fillStyle = this.strCouleurFond;
     objC2D.fillRect(0, 0, objCanvas.width, objCanvas.height);
-    //objC2D.rect(0, 0, objCanvas.width, objCanvas.height);
-    //objC2D.fill();
-    //objC2D.restore();
 
     for (let i = 0; i < this.tabGrilleNiveau.length; i++) {
       for (let j = 0; j < this.tabGrilleNiveau[i].length; j++) {
@@ -139,7 +143,8 @@ class Niveau extends Dessinable{
     }
 
     if(this.objJoueur) this.objJoueur.dessiner();
-    this.tabGardes.forEach(obj => obj.dessiner());      
+    this.tabGardes.forEach(obj => obj.dessiner());
+    //Garde.setIntersections();
   }
 
   /**
@@ -162,5 +167,34 @@ class Niveau extends Dessinable{
         this.tabGrilleNiveau[intCompteurExact][INT_POS_X_ECHELLE_FIN] = new Echelle(INT_POS_X_ECHELLE_FIN, intCompteurExact);
       }
     }
-  }    
+  }
+  
+  /**
+   * Créé le bon nombre de gardes selon le niveau
+   * @param {Map<number, Array<number>>} mapSpawn 
+   */
+  initGardes(mapSpawn) {
+    for (let i = 0; i < this.tabGardes.length; i++) {
+      this.tabGardes[i] = this.genererGarde(mapSpawn, i);
+    }
+    Garde.setIntersections();
+  }
+
+  /**
+   * À partir d'une map, génère un garde aléatoirement dans le niveau
+   * @param {Map<number, Array<number>>} mapSpawn clé = position y, valeur = tableau des positions x possible pour cet y
+   * @param {number} intNbGarde index qui décide la couleur du chandail du garde
+   */
+  genererGarde(mapSpawn, intNbGarde) {
+    let itMap = mapSpawn.entries();
+    let intPositionY = Math.floor(Math.random() * mapSpawn.size);
+    for (let i = 0; i < intPositionY - 1; i++){
+      itMap.next();
+    }
+    let tabBonneEntree = itMap.next().value;
+    let intY = tabBonneEntree[0];
+    let tabXPoss = tabBonneEntree[1];
+    let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1)[0];
+    return new Garde(intX, intY, intNbGarde);
+  }
 }

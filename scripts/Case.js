@@ -19,7 +19,15 @@ class Case extends Dessinable {
                          this.intPosY * dblHautCase);
     }
 
-    updateNav(tabGrilleNiveau) {
+    
+    updateNav(tabGrilleNav) {
         throw 'updateNav() non implémenté';
     }
+
+    /**
+     * Voir Brique.js pour la véritable utilité de cette fonction
+     * @param {Array<Case>} tabGrille 
+     * @param {Map<number, Array<number>>} mapSpawn 
+     */
+    updateSpawn(tabGrille, mapSpawn){}
 }
