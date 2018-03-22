@@ -39,16 +39,26 @@ class Jeu {
         this.creerNiveau();
     }
 
+    jouerMort(){
+        this.vies -= 1;
+        this.updateVies();
+        this.creerNiveau();
+    }
+
     updateVies(){
         this.objScoreBoard.currentLives = this.intVies;
         if(this.intVies === 0){
             this.gameOver();
+            return false;
         }
+        return true;
     }
 
     gameOver(){
         //Jouer son: (fall)
         //DrawText (Game Over, Try Again? [yes] [no])
+        //Reset stats
+        this.creerNiveau(); //tempo
     }
 
     bouclePrincipale () {
