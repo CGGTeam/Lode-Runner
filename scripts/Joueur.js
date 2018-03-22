@@ -248,4 +248,14 @@ class Joueur extends EntiteDynamique {
             }
         });
     }
+
+    mourrir(){
+        console.log("hes dead jim")
+        //Play ded sound
+        instanceMoteurSon.jouerSon(1);
+        //Take off life
+        //Reset level
+        objJeu.jouerMort();
+    }
+
 }

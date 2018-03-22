@@ -33,6 +33,7 @@ class EntiteDynamique extends Dessinable{
         this.binBriqueDroite = false;
         this.binBriqueHaut = false;
         this.binBriqueBas = true;
+        this.binBriqueLive = false;
         this.binUp = false;
         this.binDown = false;
         this.binMoveUp = intDeplY < 0 ? true : (intDeplX > 0 ? false : this.binMoveUp);
@@ -41,7 +42,7 @@ class EntiteDynamique extends Dessinable{
 
     /**
      * Retourne les collisions
-     * @returns {Array}
+     * @returns {Array<Case>}
      */
     getCollisions() {
         let tabObjCollisions = [];
@@ -77,6 +78,7 @@ class EntiteDynamique extends Dessinable{
         this.binBriqueHaut = false;
         this.binBriqueBas = false;
         this.binBarre = false;
+        this.binBriqueLive = false;
         this.getCollisions().forEach(value => {
             if(value instanceof Echelle){
                 this.binUp = (this.binUp || (this.intPosX - 0.5 < value.intPosX && this.intPosX + 0.5 > value.intPosX && this.intPosY > value.intPosY - 1));
@@ -89,6 +91,11 @@ class EntiteDynamique extends Dessinable{
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1  && !value.binDetruit);
                 this.binBriqueDroite = (this.binBriqueDroite || (this.intPosX + 1 < value.intPosX + 0.3 && this.intPosX + 1 > value.intPosX - 0.3)
                     && this.intPosY < value.intPosY + 1 && this.intPosY > value.intPosY - 1)  && !value.binDetruit;
+
+                this.binBriqueLive = ((this.intPosY > value.intPosY - 0.5 && this.intPosY < value.intPosY + 0.5 ) && (this.intPosX < value.intPosX + 0.5 && this.intPosX > value.intPosX - 0.5)) && !value.binDetruit;
+                if(this.binBriqueLive){
+                    this.mourrir();
+                }
 
             } else if (value instanceof Bloc) {
 
@@ -103,5 +110,9 @@ class EntiteDynamique extends Dessinable{
                 this.binBarre = (value.intPosY == Math.round(this.intPosY));
             }
         });
+    }
+
+    mourrir(){
+
     }
 }
