@@ -46,15 +46,19 @@ class Niveau extends Dessinable{
     this.tabGrilleNiveau = [];
     this.tabGrilleNav = [];
     this.tabGardes = [];
-    this.tabGardes.length = intNiveau + 2;
+    this.tabGardes.length = intNiveau + 3;
     this.strCouleurFond = 'black';
     this.binEchelleFin = false;
+    this.intNbLingots = 0;
     this.dblCompteurEchelle = 0;
     this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
+<<<<<<< HEAD
     console.log(this.tabGrilleNav);
     console.log(this.tabGrilleNiveau);
     Garde.tabIntersections = [];
+=======
+>>>>>>> 2a5ad7bfbf7aedab702dc827cfae352668a447b8
   }
   
   /**
@@ -104,7 +108,12 @@ class Niveau extends Dessinable{
           let fctFactory = objCtor.bind(objCtor, j, i);
           let objCase = new fctFactory();
           
-          if (intNbLu == 6) {
+          if (intNbLu == 4) { // est un lingot
+            this.intNbLingots++;
+          }
+          
+
+          if (intNbLu == 6) { // est une case imbrisable
             this.objJoueur = objCase;
           } else {
               this.tabGrilleNiveau[i][j] = objCase;
@@ -163,6 +172,10 @@ class Niveau extends Dessinable{
     }
   }
   
+  /**
+   * Créé le bon nombre de gardes selon le niveau
+   * @param {Map<number, Array<number>>} mapSpawn 
+   */
   initGardes(mapSpawn) {
     for (let i = 0; i < this.tabGardes.length; i++) {
       this.tabGardes[i] = this.genererGarde(mapSpawn, i);
