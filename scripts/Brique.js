@@ -22,8 +22,8 @@ class Brique extends Case{
         this.intTimeoutID = null;
     }
 
-    updateNav(tabGrilleNav) {
-        if (this.intPosY > 0 && !tabGrilleNav[this.intPosY - 1][this.intPosX]) {
+    updateNav(tabGrilleNav, tabGrilleNiveau) {
+        if (this.intPosY > 0 && !tabGrilleNiveau[this.intPosY - 1][this.intPosX]) {
             tabGrilleNav[this.intPosY - 1][this.intPosX] = true;                    
         }
     }

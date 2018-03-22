@@ -4,7 +4,7 @@ const INT_POS_X_ECHELLE_FIN = 18;
 class Niveau extends Dessinable{
   /**
    * Initialise un niveau à partir de fichierNiveau. Ce fichier
-   * est cherché par défaut à l'adresse suivante: 
+   * est cherché par défaut à l'adresse suivante: http://www.antoinebl.com/Lode-Runner/assets/maps/
    * @param {String} strFichierNiveau 
    */
   constructor(strFichierNiveau, intNiveau) {
@@ -108,7 +108,7 @@ class Niveau extends Dessinable{
             this.objJoueur = objCase;
           } else {
               this.tabGrilleNiveau[i][j] = objCase;
-              objCase.updateNav(this.tabGrilleNav);
+              objCase.updateNav(this.tabGrilleNav, this.tabGrilleNiveau);
               objCase.updateSpawn(this.tabGrilleNiveau, mapSpawn);
           }
         } else {
@@ -172,6 +172,11 @@ class Niveau extends Dessinable{
     }
   }
 
+  /**
+   * À partir d'une map, génère un garde aléatoirement dans le niveau
+   * @param {Map<number, Array<number>>} mapSpawn clé = position y, valeur = tableau des positions x possible pour cet y
+   * @param {number} intNbGarde index qui décide la couleur du chandail du garde
+   */
   genererGarde(mapSpawn, intNbGarde) {
     let itMap = mapSpawn.entries();
     let intPositionY = Math.floor(Math.random() * (mapSpawn.size + 1));
