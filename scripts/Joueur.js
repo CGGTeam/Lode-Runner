@@ -99,8 +99,7 @@ class Joueur extends EntiteDynamique {
                 break;
             case enumMapJoueur.DIG_R:
             case enumMapJoueur.DIG_L:
-                this.intNbSonJoueur = 2;
-                binLoop = true;
+                instanceMoteurSon.jouerSon(2, false);
                 break;
             case enumMapJoueur.RUN_L:
             case enumMapJoueur.RUN_R:

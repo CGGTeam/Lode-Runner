@@ -82,6 +82,7 @@ class Brique extends Case{
      * Interrompt la destruction du bloc
      */
     interrompreDestruction () {
+        instanceMoteurSon.stopperSon(2);
         window.clearTimeout(this.intTimeoutID);
         this.tabEtatAnim = enumMapBrique.RESTORE;
         this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
