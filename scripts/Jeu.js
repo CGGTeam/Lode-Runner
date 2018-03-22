@@ -40,7 +40,7 @@ class Jeu {
     }
 
     jouerMort(){
-        this.vies -= 1;
+        this.intVies -= 1;
         this.updateVies();
         this.creerNiveau();
     }
