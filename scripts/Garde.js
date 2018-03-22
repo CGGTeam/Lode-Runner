@@ -7,8 +7,12 @@ const enumGardeMap = Object.freeze({
     CLIMB_L : [[3, 0],[4, 0], [5, 0]],
     CLIMB_U : [[6, 0],[7, 0]],
     CLIMB_D : [[7, 0],[6, 0]],
-    DED : [[6, 1], [7, 1]]
-})
+    REVIVE_R : [[8, 0], [9, 0],[10, 0]],
+    REVIVE_L : [[8, 1], [9, 1],[10, 1]],
+    MORT : [[6, 0], [7, 0]]
+});
+
+const DBL_PROB_DROP = 1 / (60 * 5);
 
 class Garde extends EntiteDynamique{
 
@@ -29,8 +33,6 @@ class Garde extends EntiteDynamique{
             let dblBorneB = this.dblPosY + 0.5;
             let dblYJoueur = objJeu.objNiveau.objJoueur.dblPosY;
             let binTouchY = dblYJoueur >= dblBorneH && dblYJoueur <= dblBorneB;
-            // console.log(dblBorneG, dblBorneD, dblXJoueur)
-            // console.log(dblBorneH, dblBorneB, dblYJoueur)
 
             if (binTouchX && binTouchY) {
                 objJeu.objNiveau.objJoueur.mourir();
@@ -38,7 +40,22 @@ class Garde extends EntiteDynamique{
         } catch (e) {
             console.warn('MICHAEL IS WACK')
         }
+
+        // var map = objC2D.getImageData(0,0,320,240);
+        // var imdata = map.data;
+
+        this.getCollisions().forEach((x) => {
+            if (x instanceof Lingot) {
+                instanceMoteurSon.jouerSon(4); //REMPLACER AVEC SON DIFFÉRENT
+                this.objLingot = objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX];
+                objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
+            }
+        });
         
+        if (Math.random() <= DBL_PROB_DROP){
+            objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = this.objLingot;
+            this.objLingot = null;
+        }
     }
 
     pathFinding(){
