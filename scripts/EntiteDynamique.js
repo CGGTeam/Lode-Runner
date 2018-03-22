@@ -94,7 +94,7 @@ class EntiteDynamique extends Dessinable{
 
                 this.binBriqueLive = ((this.intPosY > value.intPosY - 0.5 && this.intPosY < value.intPosY + 0.5 ) && (this.intPosX < value.intPosX + 0.5 && this.intPosX > value.intPosX - 0.5)) && !value.binDetruit;
                 if(this.binBriqueLive){
-                    this.mourrir();
+                    this.mourir();
                 }
 
             } else if (value instanceof Bloc) {
@@ -112,7 +112,7 @@ class EntiteDynamique extends Dessinable{
         });
     }
 
-    mourrir(){
+    mourir(){
 
     }
 }

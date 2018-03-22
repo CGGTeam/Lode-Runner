@@ -87,7 +87,6 @@ class Niveau extends Dessinable{
    * 4: lingot d'or
    * 5: bloc imbrisable (comme ceux en bas tout à fait)
    * 6: Joueur
-   * 7: Garde
    * @param {String} strContenuFichier 
    */
   traiterFichier (strContenuFichier) {

@@ -245,7 +245,7 @@ class Joueur extends EntiteDynamique {
         });
     }
 
-    mourrir(){
+    mourir(){
         console.log("hes dead jim")
         //Play ded sound
         instanceMoteurSon.jouerSon(1);

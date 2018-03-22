@@ -3,7 +3,6 @@
 class Jeu {
     constructor() {
         //initAnimation
-        objScore = this.objScoreBoard;
         this.intScore = 0;
         this.intVies = 1;
         this.intNiveau = 0;
