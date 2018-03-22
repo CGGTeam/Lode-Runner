@@ -16,4 +16,32 @@ class Garde extends EntiteDynamique{
         super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard0.png'));
         this.dblAnimFrame = 0;
     }
+
+    static setIntersections(params) {
+        Garde.tabIntersections = [];
+        for(let i = 0; i < objJeu.objNiveau.tabGrilleNiveau.length; i++){
+            Garde.tabIntersections[i] = [];
+            for(let j = 0; j < objJeu.objNiveau.tabGrilleNiveau[i].length; j++){
+                Garde.tabIntersections[i][j] =
+                    objJeu.objNiveau.tabGrilleNav[i][j] && (
+                        (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Brique && 
+                            (objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Echelle || 
+                            objJeu.objNiveau.tabGrilleNiveau[i - 1][j] instanceof Echelle || 
+                            objJeu.objNiveau.tabGrilleNiveau[i][j + 1] instanceof Echelle ||
+                            objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Echelle ||
+                            objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Barre ||
+                            objJeu.objNiveau.tabGrilleNiveau[i][j + 1] instanceof Barre ||
+                            objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Barre)
+                        ) ||
+                            (objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Echelle &&
+                            (objJeu.objNiveau.tabGrilleNiveau[i][j + 1] instanceof Barre ||
+                            objJeu.objNiveau.tabGrilleNiveau[i][j - 1] instanceof Barre)) ||
+
+                            (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Echelle &&
+                            !objJeu.objNiveau.tabGrilleNiveau[i - 1][j])
+                    );
+        }
+        }
+        console.log(Garde.tabIntersections);
+    }
 }

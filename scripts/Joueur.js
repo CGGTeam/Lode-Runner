@@ -210,7 +210,7 @@ class Joueur extends EntiteDynamique {
                 break;
             //Down
             case 'ArrowDown':
-                if(this.binBarre)
+                if(this.binBarre && !this.binBriqueBas)
                     this.lastDescBarre = this.intPosY;
                 if (this.binDown) {
                     this.deplacer(0, Math.round(VITESSE_JOUEUR * this.delta / 100) / 10);
