@@ -230,6 +230,8 @@ class Joueur extends EntiteDynamique {
                     objCase.detruire();
                     this.dblAnimFrame = 0;
                     this.objCaseCreusee = objCase;
+                } else {
+                    this.tabEtatAnim = this.binMoveRight ? enumMapJoueur.RUN_R : enumMapJoueur.RUN_L
                 }
                 break;
             case 'p':
