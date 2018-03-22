@@ -53,6 +53,9 @@ class Niveau extends Dessinable{
     this.dblCompteurEchelle = 0;
     this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
+    console.log(this.tabGrilleNav);
+    console.log(this.tabGrilleNiveau);
+    Garde.tabIntersections = [];
   }
   
   /**
@@ -70,7 +73,6 @@ class Niveau extends Dessinable{
     })
     .then(text => {
         this.traiterFichier(text);
-        Garde.setIntersections();
       })
     .catch((err) => console.error(err));
   }
@@ -141,7 +143,8 @@ class Niveau extends Dessinable{
     }
 
     if(this.objJoueur) this.objJoueur.dessiner();
-    this.tabGardes.forEach(obj => obj.dessiner());      
+    this.tabGardes.forEach(obj => obj.dessiner());
+    //Garde.setIntersections();
   }
 
   /**
@@ -174,6 +177,7 @@ class Niveau extends Dessinable{
     for (let i = 0; i < this.tabGardes.length; i++) {
       this.tabGardes[i] = this.genererGarde(mapSpawn, i);
     }
+    Garde.setIntersections();
   }
 
   /**

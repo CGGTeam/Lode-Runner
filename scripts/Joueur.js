@@ -231,6 +231,9 @@ class Joueur extends EntiteDynamique {
                     this.objCaseCreusee = objCase;
                 }
                 break;
+            case 'p':
+                objJeu.objNiveau.tabGardes[0].pathFinding();
+                break;
         }
 
         this.getCollisions().forEach((x) => {
