@@ -18,6 +18,22 @@ class Garde extends EntiteDynamique{
         this.pathToPlayer = null;
     }
 
+    mettreAJourAnimation () {
+        let dblBorneG = this.dblPosX - 10;
+        let dblBorneD = this.dblPosX + 10;
+        let dblXJoueur = objJeu.objNiveau.objJoueur.dblPosX;
+        let binTouchX = dblXJoueur >= dblBorneG && dblXJoueur <= dblBorneD;
+        
+        let dblBorneH = this.dblPosY - 11;
+        let dblBorneB = this.dblPosY + 11;
+        let dblYJoueur = objJeu.objNiveau.objJoueur.dblPosY;
+        let binTouchY = dblYJoueur >= dblBorneH && dblXJoueur <= dblBorneB;
+
+        if (binTouchX && binTouchY) {
+            objJeu.objNiveau.objJoueur.mourir();
+        }
+    }
+
     pathFinding(){
         let currentPaths = [new Path(this.dblPosX, this.dblPosY, 1, 0),new Path(this.dblPosX, this.dblPosY, -1, 0)];
         //while(!this.pathToPlayer){
