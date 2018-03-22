@@ -125,12 +125,8 @@ class Niveau extends Dessinable{
    * Déssine les cases, puis les gardes et le joueur
    */
   dessiner () {
-    //objC2D.save();
     objC2D.fillStyle = this.strCouleurFond;
     objC2D.fillRect(0, 0, objCanvas.width, objCanvas.height);
-    //objC2D.rect(0, 0, objCanvas.width, objCanvas.height);
-    //objC2D.fill();
-    //objC2D.restore();
 
     for (let i = 0; i < this.tabGrilleNiveau.length; i++) {
       for (let j = 0; j < this.tabGrilleNiveau[i].length; j++) {
@@ -179,14 +175,14 @@ class Niveau extends Dessinable{
    */
   genererGarde(mapSpawn, intNbGarde) {
     let itMap = mapSpawn.entries();
-    let intPositionY = Math.floor(Math.random() * (mapSpawn.size + 1));
+    let intPositionY = Math.floor(Math.random() * mapSpawn.size);
     for (let i = 0; i < intPositionY - 1; i++){
       itMap.next();
     }
     let tabBonneEntree = itMap.next().value;
     let intY = tabBonneEntree[0];
     let tabXPoss = tabBonneEntree[1];
-    let intX = tabXPoss.splice(Math.floor(Math.random() * (tabXPoss.length + 1)), 1)[0];
+    let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1)[0];
     return new Garde(intX, intY, intNbGarde);
   }
 }
