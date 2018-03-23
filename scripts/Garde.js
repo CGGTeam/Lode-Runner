@@ -7,13 +7,18 @@ const enumGardeMap = Object.freeze({
     CLIMB_L : [[3, 0],[4, 0], [5, 0]],
     CLIMB_U : [[6, 0],[7, 0]],
     CLIMB_D : [[7, 0],[6, 0]],
-    DED : [[6, 1], [7, 1]]
-})
+    REVIVE_R : [[8, 0], [9, 0],[10, 0]],
+    REVIVE_L : [[8, 1], [9, 1],[10, 1]],
+    MORT : [[6, 0], [7, 0]]
+});
+
+const DBL_PROB_DROP = 1 / (60 * 10);
 
 class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY, intNbGarde) {
-        super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard' + intNbGarde + '.png'));
+        super(posInitX,posInitY,enumGardeMap, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/guard.png'));
+        this.intNbGarde;
         this.dblAnimFrame = 0;
         this.pathToPlayer = null;
     }
@@ -29,8 +34,6 @@ class Garde extends EntiteDynamique{
             let dblBorneB = this.dblPosY + 0.5;
             let dblYJoueur = objJeu.objNiveau.objJoueur.dblPosY;
             let binTouchY = dblYJoueur >= dblBorneH && dblYJoueur <= dblBorneB;
-            // console.log(dblBorneG, dblBorneD, dblXJoueur)
-            // console.log(dblBorneH, dblBorneB, dblYJoueur)
 
             if (binTouchX && binTouchY) {
                 objJeu.objNiveau.objJoueur.mourir();
@@ -38,7 +41,32 @@ class Garde extends EntiteDynamique{
         } catch (e) {
             console.warn('MICHAEL IS WACK')
         }
+
+        // var map = objC2D.getImageData(0,0,320,240);
+        // var imdata = map.data;
+
+        this.getCollisions().forEach((x) => {
+            if (x instanceof Lingot && this != x.objAncienGarde) {
+                instanceMoteurSon.jouerSon(4); //REMPLACER AVEC SON DIFFÉRENT
+                this.objLingot = objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX];
+                objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
+            }
+        });
         
+        if (this.objLingot && Math.random() <= DBL_PROB_DROP){
+            objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
+            this.objLingot.objAncienGarde = this;
+            let objLingotSave = this.objLingot;
+            let fctTimeout = (objLingot) => {
+                objLingotSave.objAncienGarde = null;
+            }
+            window.setTimeout(() => fctTimeout(this.objLingot), 2000);
+            this.objLingot = null;
+        }
+    }
+
+    dessiner() {
+        super.dessiner();
     }
 
     pathFinding(){

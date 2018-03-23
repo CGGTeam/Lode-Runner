@@ -19,7 +19,7 @@ Array.prototype.pushIfNoNull = function(element){
     }
 }
 
-function preloadImage(strUrl) {
+function preloadImage (strUrl) {
     var objImage = new Image();
     objImage.src = strUrl;
     return objImage;
