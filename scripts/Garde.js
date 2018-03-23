@@ -12,12 +12,12 @@ const enumGardeMap = Object.freeze({
     MORT : [[6, 0], [7, 0]]
 });
 
-const DBL_PROB_DROP = 1 / (60 * 5);
+const DBL_PROB_DROP = 1 / (60 * 10);
 
 class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY, intNbGarde) {
-        super(posInitX,posInitY,enumGardeMap, preloadImage('./assets/img/guard' + intNbGarde + '.png'));
+        super(posInitX,posInitY,enumGardeMap, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/guard' + intNbGarde + '.png'));
         this.dblAnimFrame = 0;
         this.pathToPlayer = null;
     }
@@ -45,15 +45,21 @@ class Garde extends EntiteDynamique{
         // var imdata = map.data;
 
         this.getCollisions().forEach((x) => {
-            if (x instanceof Lingot) {
+            if (x instanceof Lingot && this != x.objAncienGarde) {
                 instanceMoteurSon.jouerSon(4); //REMPLACER AVEC SON DIFFÉRENT
                 this.objLingot = objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX];
                 objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
             }
         });
         
-        if (Math.random() <= DBL_PROB_DROP){
-            objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = this.objLingot;
+        if (this.objLingot && Math.random() <= DBL_PROB_DROP){
+            objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
+            this.objLingot.objAncienGarde = this;
+            let objLingotSave = this.objLingot;
+            let fctTimeout = (objLingot) => {
+                objLingotSave.objAncienGarde = null;
+            }
+            window.setTimeout(() => fctTimeout(this.objLingot), 2000);
             this.objLingot = null;
         }
     }
