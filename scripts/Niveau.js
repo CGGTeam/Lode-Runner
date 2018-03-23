@@ -4,7 +4,7 @@ const INT_POS_X_ECHELLE_FIN = 18;
 class Niveau extends Dessinable{
   /**
    * Initialise un niveau à partir de fichierNiveau. Ce fichier
-   * est cherché par défaut à l'adresse suivante: http://www.antoinebl.com/Lode-Runner/assets/maps/
+   * est cherché par défaut à l'adresse suivante: http://cggteam.github.io/Lode-Runner/assets/maps/
    * @param {String} strFichierNiveau 
    */
   constructor(strFichierNiveau, intNiveau) {
@@ -65,7 +65,7 @@ class Niveau extends Dessinable{
    * @param {String} strFichierNiveau nom du fichier à chercher dans /assets/maps
    */
   lireFichierNiveau(strFichierNiveau) {
-    fetch('http://www.antoinebl.com/Lode-Runner/assets/maps/' + strFichierNiveau)
+    fetch('http://cggteam.github.io/Lode-Runner/assets/maps/' + strFichierNiveau)
     .then(response => response.text())
     .catch((err) => {
       console.warn('Erreur de communication avec le serveur. Niveau par défaut utilisé');

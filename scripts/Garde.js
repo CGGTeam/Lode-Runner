@@ -35,7 +35,7 @@ const CHROMA_KEY_PANTALON = Object.freeze([255, 255, 255]);
 class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY, intNbGarde) {
-        super(posInitX,posInitY,enumGardeMap, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/guard.png'));
+        super(posInitX,posInitY,enumGardeMap, preloadImage('http://cggteam.github.io/Lode-Runner/assets/img/guard.png'));
         this.intNbGarde = intNbGarde;
         this.dblAnimFrame = 0;
         this.pathToPlayer = null;

@@ -14,7 +14,7 @@ const FPS_ANIM_BRIQUE = 0.2;
 class Brique extends Case{
     constructor (intPosX, intPosY) {
         super(intPosX, intPosY, enumTypesBlocs.objBrique);
-        this.objSpriteSheet = preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/hole.png');
+        this.objSpriteSheet = preloadImage('http://cggteam.github.io/Lode-Runner/assets/img/hole.png');
         this.tabEtatAnim = enumMapBrique.RESTORE;
         this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
         this.binEnDestruction = false;
