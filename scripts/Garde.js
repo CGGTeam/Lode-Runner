@@ -17,7 +17,8 @@ const DBL_PROB_DROP = 1 / (60 * 10);
 class Garde extends EntiteDynamique{
 
     constructor(posInitX, posInitY, intNbGarde) {
-        super(posInitX,posInitY,enumGardeMap, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/guard' + intNbGarde + '.png'));
+        super(posInitX,posInitY,enumGardeMap, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/guard.png'));
+        this.intNbGarde;
         this.dblAnimFrame = 0;
         this.pathToPlayer = null;
     }
@@ -62,6 +63,10 @@ class Garde extends EntiteDynamique{
             window.setTimeout(() => fctTimeout(this.objLingot), 2000);
             this.objLingot = null;
         }
+    }
+
+    dessiner() {
+        super.dessiner();
     }
 
     pathFinding(){

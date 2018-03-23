@@ -24,12 +24,3 @@ function preloadImage (strUrl) {
     objImage.src = strUrl;
     return objImage;
 }
-
-function preloadImage1 (strUrl) {
-    console.log(strUrl);
-    let objImage;     
-    fetch(strUrl).then(img => {
-        objImage = img;
-        return objImage;
-    });
-}
