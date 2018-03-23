@@ -21,6 +21,7 @@ Array.prototype.pushIfNoNull = function(element){
 
 function preloadImage (strUrl) {
     var objImage = new Image();
+    objImage.crossOrigin = 'Anonymous';
     objImage.src = strUrl;
     return objImage;
 }
