@@ -92,8 +92,11 @@ class EntiteDynamique extends Dessinable{
                 this.binBriqueDroite = (this.binBriqueDroite || (this.dblPosX + 1 < value.intPosX + 0.3 && this.dblPosX + 1 > value.intPosX - 0.3)
                     && this.dblPosY < value.intPosY + 1 && this.dblPosY > value.intPosY - 1)  && !value.binDetruit;
 
-                this.binBriqueLive = ((this.intPosY > value.intPosY - 0.5 && this.intPosY < value.intPosY + 0.5 ) && (this.intPosX < value.intPosX + 0.5 && this.intPosX > value.intPosX - 0.5)) && !value.binDetruit;
+                this.binBriqueLive = ((this.dblPosY > value.intPosY - 0.5 && this.dblPosY < value.intPosY + 0.5 ) && (this.dblPosX < value.intPosX + 0.5 && this.dblPosX > value.intPosX - 0.5)) && !value.binDetruit;
+                //console.log(this.binBriqueLive);
+                //console.log(value);
                 if(this.binBriqueLive){
+                    console.log(this.binBriqueLive);
                     this.mourir();
                 }
 

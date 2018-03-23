@@ -135,14 +135,14 @@ class Garde extends EntiteDynamique{
                             (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Echelle &&
                             !objJeu.objNiveau.tabGrilleNiveau[i][j])
                     );
-                    if(Garde.tabIntersections[i][j]){
+                    /*if(Garde.tabIntersections[i][j]){
                         objC2D.save();
                         objC2D.fillStyle = "#FF0000";
                         //console.log(objC2D.fillStyle);
                         objC2D.fillRect(j * dblLargCase, i * dblHautCase, 5, 5);
                         //objC2D.fill();
                         objC2D.restore();
-                    }
+                    }*/
         }
         }
         //console.log(Garde.tabIntersections);
