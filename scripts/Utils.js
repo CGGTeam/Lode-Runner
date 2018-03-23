@@ -19,6 +19,16 @@ Array.prototype.pushIfNoNull = function(element){
     }
 }
 
+Array.prototype.pushCroissant = function(element, comparer, binCroissant){
+    for(let i = 0; i < this.length; i++){
+        if(comparer(this[i], element)){
+            this.splice(i,0,element);
+            return;
+        }
+    }
+    this.push(element);
+}
+
 function preloadImage (strUrl) {
     var objImage = new Image();
     objImage.crossOrigin = 'Anonymous';

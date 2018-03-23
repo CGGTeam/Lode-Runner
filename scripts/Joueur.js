@@ -246,6 +246,7 @@ class Joueur extends EntiteDynamique {
                 objJeu.ramasseLingot();
             }
         });
+        this.updateIntersections();
     }
 
     mourir(){
@@ -256,6 +257,22 @@ class Joueur extends EntiteDynamique {
         //Take off life
         //Reset level
         objJeu.jouerMort();
+    }
+
+    updateIntersections(){
+       // Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)].forEach(x => {
+       //     x.playerPos = this;
+       // });
+        
+        let x = Math.round(this.dblPosX);
+        let y = Math.round(this.dblPosY)
+        if(Garde.tabIntersections[y][x] instanceof Array){ 
+        let lengthTabInters = Garde.tabIntersections[y][x].length;
+            for(let i = 0; i < lengthTabInters; i++){
+                    Garde.tabIntersections[y][x][i].playerPos = this;
+            }
+        }
+        
     }
 
 }

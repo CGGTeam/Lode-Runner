@@ -1,18 +1,27 @@
 class Path{
     
-    constructor(intX, intY, horizontal, vertical){
-        this.tabPositionsX = [intX];
-        this.tabPositionsY = [intY];
-        this.horizontal = horizontal;
-        this.vertical = vertical;
-        this.lastPosX = intX;
-        this.lastPosY = intY;
+    constructor(intY, intX, initIntersection){
+        this.initPosX = Math.round(intX);
+        this.initPosY = Math.round(intY);
+        this.tabIntersections = [initIntersection];
+        this.lastIntersection = initIntersection;
     }
 
-    addPosition(intX, intY){
-        this.tabPositionsX.push(intX);
-        this.tabPositionsY.push(intY);
-        this.lastPosX = intX;
-        this.lastPosY = intY;
+    addPosition(intersection){
+        let binExisteDeja = false;
+        for(let i = 0; i < this.tabIntersections.length; i++)
+            binExisteDeja = binExisteDeja || this.tabIntersections[i] == intersection;
+        if(!binExisteDeja){
+            this.tabIntersections.push(intersection);
+            this.lastIntersection = intersection;
+        }
+        return this;
+    }
+
+    clone(){
+        let obj = new Path();
+        Object.assign(obj,this);
+        obj.tabIntersections = this.tabIntersections.slice(0);
+        return obj;
     }
 }
