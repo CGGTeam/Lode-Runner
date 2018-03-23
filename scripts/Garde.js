@@ -126,9 +126,15 @@ class Garde extends EntiteDynamique{
         let comparateurCroissant = function (e, element){
             return e.tabIntersections.length > element.length;
         }
+        if(Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)] instanceof Array){
         for(let i = 0; i < Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)].length; i++){
             paths.pushCroissant(new Path(this.dblPosY, this.dblPosX, Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)][i]), comparateurCroissant);
-        }
+        }}else if(Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)] instanceof Intersection){
+            let tabNextsTempo = Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)].nextIntersections();
+            for(let i = 0; i < tabNextsTempo.length; i++){
+                paths.pushCroissant(new Path(this.dblPosY, this.dblPosX, Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)]), comparateurCroissant);
+            }
+                } 
         while(!playerPath){
             for(let i = 0; i < paths.length && !playerPath; i++){
                 let nextInters = paths[i].lastIntersection.nextIntersections();
@@ -143,22 +149,20 @@ class Garde extends EntiteDynamique{
             paths = newPaths;
         }
 
-        console.log(playerPath);
-        /*
-        let path = [];
-        let toCheck = Garde.tabIntersections[this.dblPosY][this.dblPosX];
-        let nextCheck;
-        let lastIntersection;
-        do{
-            nextCheck = [];
-            for(let i = 0; i < toCheck.length && !(lastIntersection instanceof Joueur); i++){
-                lastIntersection = toCheck[i].nextIntersections();
-                nextCheck = nextCheck.concat(lastIntersection);
-            }
-            toCheck = nextCheck;
-        }while(!(lastIntersection instanceof Joueur));
-        console.log()
-        */
+        //console.log(playerPath);
+        this.goToInters(playerPath.tabIntersections[0]);
+    }
+
+    goToInters(intersection){
+        if(intersection.intPosX < this.dblPosX){
+            this.deplacer(-0.1,0);
+        }else if(intersection.intPosX > this.dblPosX){
+            this.deplacer(0.1,0);
+        }else if(intersection.intPosY < this.dblPosY){
+            this.deplacer(0,-0.1);
+        }else if(intersection.intPosY > this.dblPosY){
+            this.deplacer(0,0.1);
+        }
     }
 
 /**
