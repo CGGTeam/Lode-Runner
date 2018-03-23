@@ -25,7 +25,7 @@ class Joueur extends EntiteDynamique {
      * @param {number} intPosInitY position initiale y dans la grille
      */
     constructor(intPosInitX, intPosInitY) {
-        super(intPosInitX, intPosInitY, enumMapJoueur, preloadImage('./assets/img/runner.png'));
+        super(intPosInitX, intPosInitY, enumMapJoueur, preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/runner.png'));
         this.score = 0;
         document.addEventListener('keydown', (event) => {
             switch (event.key) {
@@ -218,17 +218,20 @@ class Joueur extends EntiteDynamique {
                 this.binMoveRight = this.presentKey === 'x';
                 let objCase = objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.dblPosY) + 1]
                     [Math.floor(this.dblPosX) - (this.presentKey === 'z' ? 1 : -1)];
-                if (this.objCaseCreusee) {
+                
+                if (this.objCaseCreusee && this.objCaseCreusee != objCase) {
                     this.objCaseCreusee.interrompreDestruction();
                     this.objCaseCreusee = null;
                 }
 
-                if (!this.binFalling && objCase && objCase instanceof Brique) {
+                if (!this.binFalling && objCase && objCase instanceof Brique && !objCase.binDetruit && this.objCaseCreusee != objCase) {
                     this.dblPosX = Math.floor(this.dblPosX);
                     this.dblPosY = Math.floor(this.dblPosY);
                     objCase.detruire();
                     this.dblAnimFrame = 0;
                     this.objCaseCreusee = objCase;
+                } else {
+                    this.tabEtatAnim = this.binMoveRight ? enumMapJoueur.RUN_R : enumMapJoueur.RUN_L
                 }
                 break;
             case 'p':
@@ -249,6 +252,7 @@ class Joueur extends EntiteDynamique {
     mourir(){
         console.log("hes dead jim")
         //Play ded sound
+        instanceMoteurSon.stopperSon();
         instanceMoteurSon.jouerSon(1);
         //Take off life
         //Reset level

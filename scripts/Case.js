@@ -1,9 +1,9 @@
 const enumTypesBlocs = Object.freeze({
-    objBrique: preloadImage('./assets/img/brick.png'),
-    objEchelle: preloadImage('./assets/img/ladder.png'),
-    objGrimpe: preloadImage('./assets/img/rope.png'),
-    objLingot: preloadImage('./assets/img/gold.png'),
-    objBloc: preloadImage('./assets/img/block.png')
+    objBrique: preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/brick.png'),
+    objEchelle: preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/ladder.png'),
+    objGrimpe: preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/rope.png'),
+    objLingot: preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/gold.png'),
+    objBloc: preloadImage('http://www.antoinebl.com/Lode-Runner/assets/img/block.png')
 });
 
 class Case extends Dessinable {
