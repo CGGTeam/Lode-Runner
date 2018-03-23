@@ -42,20 +42,46 @@ class Garde extends EntiteDynamique{
     }
 
     pathFinding(){
-        let currentPaths = [new Path(this.dblPosX, this.dblPosY, 1, 0),new Path(this.dblPosX, this.dblPosY, -1, 0)];
-        //while(!this.pathToPlayer){
-            this.pathToPlayer = null;
-            for(let i = 0; i < currentPaths.length && !this.pathToPlayer; i++){
-                let tempoPaths = this.nextPaths(currentPaths[i]);
-                if(tempoPaths){
-                    currentPaths = currentPaths.concat(tempoPaths);
-                }else{
-                    currentPaths.splice(i, 1);
-                }
-           // }
-            console.log(currentPaths);
+
+        let playerPath = null;
+        let paths = [];
+        let newPaths = [];
+        let comparateurCroissant = function (e, element){
+            return e.tabIntersections.length > element.length;
         }
-        console.log(this.pathToPlayer);
+        for(let i = 0; i < Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)].length; i++){
+            paths.pushCroissant(new Path(this.dblPosY, this.dblPosX, Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)][i]), comparateurCroissant);
+        }
+        while(!playerPath){
+            for(let i = 0; i < paths.length && !playerPath; i++){
+                let nextInters = paths[i].lastIntersection.nextIntersections();
+                for(let j = 0; j < nextInters.length && !playerPath; j++){
+                    let tempo = paths[i].clone();
+                    tempo.addPosition(nextInters[j]);
+                    newPaths.pushCroissant(tempo, comparateurCroissant);
+                    if(nextInters[j].playerPos)
+                        playerPath = tempo;
+                }
+            }
+            paths = newPaths;
+        }
+
+        console.log(playerPath);
+        /*
+        let path = [];
+        let toCheck = Garde.tabIntersections[this.dblPosY][this.dblPosX];
+        let nextCheck;
+        let lastIntersection;
+        do{
+            nextCheck = [];
+            for(let i = 0; i < toCheck.length && !(lastIntersection instanceof Joueur); i++){
+                lastIntersection = toCheck[i].nextIntersections();
+                nextCheck = nextCheck.concat(lastIntersection);
+            }
+            toCheck = nextCheck;
+        }while(!(lastIntersection instanceof Joueur));
+        console.log()
+        */
     }
 
 /**
@@ -64,6 +90,7 @@ class Garde extends EntiteDynamique{
  */
     nextPaths(path){
         let binAccessible = true;
+        /*
         while(binAccessible && !Garde.tabIntersections[path.lastPosY][path.lastPosX] && !this.pathToPlayer){
             path.addPosition(path.lastPosX + path.horizontal, path.lastPosY + path.vertical)
             binAccessible = path.lastPosY < Garde.tabIntersections.length && path.lastPosX < Garde.tabIntersections[0].length 
@@ -73,53 +100,22 @@ class Garde extends EntiteDynamique{
                     this.pathToPlayer = path;
                 }
         }
+        */
         
-        if(binAccessible){
-            let tabRetour = [];
-            let tempo;
-            //Up
-            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY-1][path.lastPosX]){
-                tempo = Object.assign({},path);
-                tempo.vertical = -1;
-                tempo.horizontal = 0;
-                tabRetour.push(tempo);
-            }
-            //Down
-            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY+1][path.lastPosX]){
-                tempo = Object.assign({},path);
-                tempo.vertical = 1;
-                tempo.horizontal = 0;
-                tabRetour.push(tempo);
-            }
-            //Left
-            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosX-1]){
-                tempo = Object.assign({},path);
-                tempo.vertical = 0;
-                tempo.horizontal = -1;
-                tabRetour.push(tempo);
-            }
-            //Right
-            if(objJeu.objNiveau.tabGrilleNav[path.lastPosY][path.lastPosY+1]){
-                tempo = Object.assign({},path);
-                tempo.vertical = 0;
-                tempo.horizontal = 1;
-                tabRetour.push(tempo);
-            }
-            
-            return tabRetour;
-            
-        }else{
-            
-            return null;
-        }
     }
 
     static setIntersections(params) {
         Garde.tabIntersections = [];
+        Garde.lstIntersections = [];
         for(let i = 0; i < objJeu.objNiveau.tabGrilleNiveau.length; i++){
             Garde.tabIntersections[i] = [];
             for(let j = 0; j < objJeu.objNiveau.tabGrilleNiveau[i].length; j++){
-                Garde.tabIntersections[i][j] = 
+                Garde.tabIntersections[i][j] = null;
+            }
+        }
+        for(let i = 0; i < objJeu.objNiveau.tabGrilleNiveau.length; i++){
+            for(let j = 0; j < objJeu.objNiveau.tabGrilleNiveau[i].length; j++){
+                if(
                     objJeu.objNiveau.tabGrilleNav[i][j] && (
                         (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Brique && 
                             (objJeu.objNiveau.tabGrilleNiveau[i][j] instanceof Echelle || 
@@ -134,8 +130,56 @@ class Garde extends EntiteDynamique{
 
                             (objJeu.objNiveau.tabGrilleNiveau[i + 1][j] instanceof Echelle &&
                             !objJeu.objNiveau.tabGrilleNiveau[i][j])
-                    );
-                    if(Garde.tabIntersections[i][j]){
+                    )){
+                        Garde.tabIntersections[i][j] = new Intersection(j,i);
+                        Garde.lstIntersections.push(Garde.tabIntersections[i][j]);
+                        //Up
+                        for(let k = i-1; objJeu.objNiveau.tabGrilleNav[k][j]; k--){
+                            if(objJeu.objNiveau.tabGrilleNav[k][j]){
+                                if(Garde.tabIntersections[k][j] instanceof Array){
+                                    Garde.tabIntersections[k][j].push(Garde.tabIntersections[i][j]);
+                                }else if (!(Garde.tabIntersections[k][j] instanceof Intersection)){
+                                    Garde.tabIntersections[k][j] = [Garde.tabIntersections[i][j]];
+                                }
+                            }
+                        }
+                        //Down
+                        for(let k = i+1; objJeu.objNiveau.tabGrilleNav[k][j]; k++){
+                            if(objJeu.objNiveau.tabGrilleNav[k][j]){
+                                if(Garde.tabIntersections[k][j] instanceof Array){
+                                    Garde.tabIntersections[k][j].push(Garde.tabIntersections[i][j]);
+                                }else if (!(Garde.tabIntersections[k][j] instanceof Intersection)){
+                                    Garde.tabIntersections[k][j] = [Garde.tabIntersections[i][j]];
+                                }
+                            }
+                        }
+                        //Left
+                        for(let k = j-1; objJeu.objNiveau.tabGrilleNav[i][k]; k--){
+                            if(objJeu.objNiveau.tabGrilleNav[i][k]){
+                                if(Garde.tabIntersections[i][k] instanceof Array){
+                                    Garde.tabIntersections[i][k].push(Garde.tabIntersections[i][j]);
+                                }else if (!(Garde.tabIntersections[i][k] instanceof Intersection)){
+                                    Garde.tabIntersections[i][k] = [Garde.tabIntersections[i][j]];
+                                }
+                            }
+                        }
+                        //Right
+                        for(let k = j+1; objJeu.objNiveau.tabGrilleNav[i][k]; k++){
+                            if(objJeu.objNiveau.tabGrilleNav[i][k]){
+                                if(Garde.tabIntersections[i][k] instanceof Array){
+                                    Garde.tabIntersections[i][k].push(Garde.tabIntersections[i][j]);
+                                }else if (!(Garde.tabIntersections[i][k] instanceof Intersection)){
+                                    Garde.tabIntersections[i][k] = [Garde.tabIntersections[i][j]];
+                                }
+                            }
+                        }
+                    }
+
+                    
+
+                   // console.log(Garde.tabIntersections);
+
+                    if(Garde.tabIntersections[i][j] instanceof Intersection){
                         objC2D.save();
                         objC2D.fillStyle = "#FF0000";
                         //console.log(objC2D.fillStyle);
@@ -144,7 +188,78 @@ class Garde extends EntiteDynamique{
                         objC2D.restore();
                     }
         }
+
+        let comparateurInters = function (e, element) {
+            if(!e || !element)
+                return true;
+
+            return e.intPosX === element.intPosX && e.intPosY === element.intPosY;
+        };
+        Garde.lstIntersections.forEach(inters => {
+                        
+                        //Left
+                        if(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1]){
+                            if(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1] instanceof Array){
+                                for(let l = 0; l < Garde.tabIntersections[inters.intPosY][inters.intPosX - 1].length; l++){
+                                    if(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1][l] != inters) 
+                                        inters.tabNextIntersections.pushIfNotExist(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1][l], comparateurInters);
+                                }
+                            }else{
+                               // for(let l = 0; l < Garde.tabIntersections[inters.intPosY][inters.intPosX - 1].length; l++){
+                               //     if(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1][l] != inters) 
+                               //         inters.tabNextIntersections.push(Garde.tabIntersections[inters.intPosY][inters.intPosX - 1][l]);
+                               // }
+                            }
+                        }
+
+                        //Right
+                        if(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1]){
+                            if(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1] instanceof Array){
+                                for(let l = 0; l < Garde.tabIntersections[inters.intPosY][inters.intPosX + 1].length; l++){
+                                    if(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1][l] != inters) 
+                                        inters.tabNextIntersections.pushIfNotExist(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1][l], comparateurInters);
+                                }
+                            }else{
+                              //  for(let l = 0; l < Garde.tabIntersections[inters.intPosY][inters.intPosX + 1].length; l++){
+                              //      if(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1][l] != inters) 
+                              //          inters.tabNextIntersections.push(Garde.tabIntersections[inters.intPosY][inters.intPosX + 1][l]);
+                              //  }
+                            }
+                        }
+
+                        //Down
+                        if(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX]){
+                            if(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX] instanceof Array){
+                                for(let l = 0; l < Garde.tabIntersections[inters.intPosY + 1][inters.intPosX].length; l++){
+                                    if(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX][l] != inters) 
+                                        inters.tabNextIntersections.pushIfNotExist(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX][l], comparateurInters);
+                                }
+                            }else{
+                               // for(let l = 0; l < Garde.tabIntersections[inters.intPosY + 1][inters.intPosX].length; l++){
+                               //     if(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX][l] != inters) 
+                               //         inters.tabNextIntersections.push(Garde.tabIntersections[inters.intPosY + 1][inters.intPosX][l]);
+                               // }
+                            }
+                        }
+
+                        //Up
+                        if(Garde.tabIntersections[inters.intPosY  - 1][inters.intPosX]){
+                            if(Garde.tabIntersections[inters.intPosY - 1][inters.intPosX] instanceof Array){
+                                for(let l = 0; l < Garde.tabIntersections[inters.intPosY - 1][inters.intPosX].length; l++){
+                                    if(Garde.tabIntersections[inters.intPosY - 1][inters.intPosX][l] != inters) 
+                                        inters.tabNextIntersections.pushIfNotExist(Garde.tabIntersections[inters.intPosY - 1][inters.intPosX][l], comparateurInters);
+                                }
+                            }else{
+                              //  for(let l = 0; l < Garde.tabIntersections[inters.intPosY - 1][inters.intPosX].length; l++){
+                              //      if(Garde.tabIntersections[inters.intPosY - 1][inters.intPosX][l] != inters) 
+                              //          inters.tabNextIntersections.push(Garde.tabIntersections[inters.intPosY - 1][inters.intPosX][l]);
+                              //  }
+                            }
+                        }
+                        
+                    });
+
         }
-        //console.log(Garde.tabIntersections);
+        console.log(Garde.tabIntersections);
     }
 }
