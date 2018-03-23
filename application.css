@@ -1,4 +1,19 @@
+canvas {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
 .sLargeurEcran {
-    width: 640px;
-    height: 320px;
+    width: 320px;
+    height: 160px;
+}
+
+@font-face {
+  font-family: Lode;
+  src: url('http://cggteam.github.io/Lode-Runner/assets/font/lode_runner_c64/lode_runner_c64-webfont.woff') format('woff'), /* Modern Browsers */
+       url('http://cggteam.github.io/Lode-Runner/assets/font/lode_runner_c64/lode_runner_c64-webfont.ttf')  format('truetype'); /* Safari, Android, iOS */
 }

@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Lode Runner par Antoine Brassard Lahey et Simon Boyer</title>
+    <link rel="stylesheet" type="text/css" href="application.css"/>
+    <p style="font-family: Lode"></p>
+    <script src="./scripts/Utils.js"></script>
     <script src="./scripts/Dessinable.js"></script>
-    <script src="./scripts/AnimEnum.js"></script>
     <script src="./scripts/EntiteDynamique.js"></script>
+    <script src="./scripts/Path.js"></script>
+    <script src="./scripts/Intersection.js"></script>
     <script src="./scripts/Garde.js"></script>
     <script src="./scripts/Joueur.js"></script>
+    <script src="./scripts/Case.js"></script>
+    <script src="./scripts/Brique.js"></script>
+    <script src="./scripts/Barre.js"></script>    
+    <script src="./scripts/Lingot.js"></script>
     <script src="./scripts/Bloc.js"></script>
     <script src="./scripts/Echelle.js"></script>
     <script src="./scripts/Niveau.js"></script>
+    <script src="./scripts/MoteurSons/ChargeurAudioBuffer.js"></script>
+    <script src="./scripts/MoteurSons/MoteurSonWAAPI.js"></script>
+    <script src="./scripts/Scoreboard.js"></script>
     <script src="./scripts/Jeu.js"></script>
     <script src="Main.js"></script>
-    <link rel="stylesheet" type="text/css" href="application.css"/>
 </head>
 <body>
-<canvas id="cvJeu" class="sLargeurEcran">
+<canvas id="cvJeu" height="440" width="560" class="sLargeurEcran">
+    Votre fureteur ne supporte pas la balise canvas de HTML5
+</canvas>
+<canvas id="cvDessin" height="22" width="20" style="display:none">
     Votre fureteur ne supporte pas la balise canvas de HTML5
 </canvas>
 </body>
