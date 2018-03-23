@@ -25,7 +25,7 @@ class Joueur extends EntiteDynamique {
      * @param {number} intPosInitY position initiale y dans la grille
      */
     constructor(intPosInitX, intPosInitY) {
-        super(intPosInitX, intPosInitY, enumMapJoueur, preloadImage('http://cggteam.github.io/Lode-Runner/assets/img/runner.png'));
+        super(intPosInitX, intPosInitY, enumMapJoueur, preloadImage('https://cggteam.github.io/Lode-Runner/assets/img/runner.png'));
         this.score = 0;
         document.addEventListener('keydown', (event) => {
             switch (event.key) {

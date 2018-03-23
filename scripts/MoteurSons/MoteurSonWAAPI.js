@@ -25,13 +25,13 @@ class MoteurSonsWAAPI {
          */
         this.ListeSonsEnCours = [];
 
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/echelle.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/dead.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/dig.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/fall.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/getGold.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/goldFinish1.mp3');
-        this.ListeSons.push('http://cggteam.github.io/Lode-Runner/assets/sound/trap.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/echelle.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/dead.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/dig.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/fall.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/getGold.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/goldFinish1.mp3');
+        this.ListeSons.push('https://cggteam.github.io/Lode-Runner/assets/sound/trap.mp3');
         this.callbackFiniChargerMoteur = callbackFiniChargerMoteur;
 
         /**
