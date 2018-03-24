@@ -53,8 +53,6 @@ class Niveau extends Dessinable{
     this.dblCompteurEchelle = 0;
     this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
-    console.log(this.tabGrilleNav);
-    console.log(this.tabGrilleNiveau);
     Garde.tabIntersections = [];
   }
   

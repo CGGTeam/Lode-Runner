@@ -149,6 +149,18 @@ class Joueur extends EntiteDynamique {
         if (Math.round(this.dblAnimFrame) >= this.tabEtatAnim.length) {
             this.dblAnimFrame = 0;
         }
+
+        if (this.dblPosX < 0) {
+            this.dblPosX = 0;
+        } else if (this.dblPosX * dblLargCase >= (objCanvas.width - dblLargCase)) {
+            this.dblPosX = objCanvas.width / dblLargCase - 1;
+        }
+
+        if (this.dblPosY < 0) {
+            this.dblPosY = 0;
+        } else if (this.dblPosY * dblHautCase > (objCanvas.height - dblHautCase)) {
+            this.dblPosX = objCanvas.height / dblHautCase - 1;
+        }
     }
 
     /**
