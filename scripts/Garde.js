@@ -102,22 +102,27 @@ class Garde extends EntiteDynamique{
             }
 
             if (objCollisionBas instanceof Brique && objCollisionBas.binDetruit &&
-                !this.binPiege && !this.binLiberation && !this.binInvincible) {
-               this.binPiege = true;
-               window.setTimeout( () => {
-                   this.binPiege = false;
-                   this.binLiberation = true;W
-               }, 2000);
-               this.dblPosX = Math.round(this.dblPosX);
-               this.dblPosY++;
-               this.tabEtatAnim = this.binMoveRight ? enumGardeMap.PIEGE_R : enumGardeMap.PIEGE_L;
-               if (this.objLingot) {
-                   objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot
-               }
+                !this.binPiege && !this.binLiberation && !this.binInvincible && !objCollisionBas.binRempli) {
+                this.binPiege = true;
+                objCollisionBas.binRempli = true;
+                window.setTimeout( () => {
+                    this.binPiege = false;
+                    this.binLiberation = true;
+                }, 2000);
+                this.dblPosX = Math.round(this.dblPosX);
+                this.dblPosY++;
+                this.tabEtatAnim = this.binMoveRight ? enumGardeMap.PIEGE_R : enumGardeMap.PIEGE_L;
+                if (this.objLingot) {
+                    objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot;
+                    this.objLingot.objAncienGarde = this;
+                    this.objLingot = null;
+                }
            } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
                this.intShakeCount++;
                if (this.intShakeCount > 4) {
+                   console.log('done');
                    this.intShakeCount = 0;
+                   objCollisionCentre.binRempli = false;
                    this.binLiberation = false;
                    this.binInvincible = true;
                    this.dblAncienX = this.dblPosX;
@@ -125,6 +130,7 @@ class Garde extends EntiteDynamique{
                    this.dblPosY--;
                }
            } else if (this.binRevive && intFrameExact == this.tabEtatAnim.length - 1) {
+
                this.binEtatVie = true;
                this.binRevive = false;
                this.tabEtatAnim = enumGardeMap.RUN_R;
@@ -136,11 +142,7 @@ class Garde extends EntiteDynamique{
            if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
                objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
                this.objLingot.objAncienGarde = this;
-               let objLingotSave = this.objLingot;
-               let fctTimeout = (objLingot) => {
-                   objLingotSave.objAncienGarde = null;
-               }
-               window.setTimeout(() => fctTimeout(this.objLingot), 2000);
+               this.objLingot.objAncienGarde = this;
                this.objLingot = null;
            }
            
@@ -555,9 +557,11 @@ class Garde extends EntiteDynamique{
     }
 
     mourir() {
-        this.binEtatVie = false;
-        instanceMoteurSon.jouerSon(1);
-        window.setTimeout(() => this.revivre(), 1000);
+        if (this.binEtatVie) {
+            this.binEtatVie = false;
+            instanceMoteurSon.jouerSon(1);
+            window.setTimeout(() => this.revivre(), 1000);
+        }
     }
 
     revivre() {
