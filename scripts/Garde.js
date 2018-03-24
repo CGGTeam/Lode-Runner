@@ -3,13 +3,13 @@ const enumGardeMap = Object.freeze({
     RUN_L : [[3, 0],[4, 0], [5, 0]],
     FALL_R : [[8, 0]],
     FALL_L : [[8, 1]],
-    CLIMB_R : [[0, 0],[1, 0], [2, 0]],
-    CLIMB_L : [[3, 0],[4, 0], [5, 0]],
+    CLIMB_R : [[0, 1],[1, 1], [2, 1]],
+    CLIMB_L : [[3, 1],[4, 1], [5, 1]],
     CLIMB_U : [[6, 0],[7, 0]],
     CLIMB_D : [[7, 0],[6, 0]],
-    REVIVE_R : [[8, 0], [9, 0],[10, 0]],
-    REVIVE_L : [[8, 1], [9, 1],[10, 1]],
-    MORT : [[6, 0], [7, 0]]
+    PIEGE_R : [[8, 0], [9, 0],[10, 0]],
+    PIEGE_L : [[8, 1], [9, 1],[10, 1]],
+    REVIVE : [[6, 0], [7, 0]]
 });
 
 const enumCoulsGardes = Object.freeze([
@@ -32,7 +32,7 @@ const DBL_PROB_DROP = 1 / (60 * 10);
 const CHROMA_KEY_CHANDAIL = Object.freeze([186, 219, 239]);
 const CHROMA_KEY_PANTALON = Object.freeze([255, 255, 255]);
 const VITESSE_GARDE = 2.945;  // U/s
-
+const DBL_FPS_GARDE = 0.25;
 
 class Garde extends EntiteDynamique{
 
@@ -53,6 +53,17 @@ class Garde extends EntiteDynamique{
         this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1 / 40;
         this.lastCalled = Date.now();
 
+        this.tabEtatAnim = this.enumAnim.RUN_R;
+        this.binLiberation = false;
+        this.binPiege = false;
+        this.intShakeCount = 0;
+        this.binInvincible = false;
+        this.dblAncienX = 0;
+        this.binRevive = false;
+    }
+
+    mettreAJourAnimation () {
+        let intFrameExact = Math.floor(this.dblAnimFrame);
         try { //TODO: solution plus élégante
             let dblBorneG = this.dblPosX - 0.5;
             let dblBorneD = this.dblPosX + 0.5;
@@ -81,8 +92,52 @@ class Garde extends EntiteDynamique{
                 objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
             }
         });
-        
-        if (this.objLingot && Math.random() <= DBL_PROB_DROP){
+        this.setColBin();
+        let objCollisionCentre = objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)];
+        let objCollisionBas =  objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY) + 1][Math.round(this.dblPosX)];
+        if (objCollisionCentre instanceof Echelle && Math.round(this.dblPosY) != this.dblPosY &&
+          !(objCollisionBas instanceof Brique) || objCollisionBas instanceof Echelle) {
+            this.tabEtatAnim = this.binMoveUp ? enumGardeMap.CLIMB_U : enumGardeMap.CLIMB_D;
+        } else if (objCollisionCentre instanceof Barre) {
+            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.CLIMB_R : enumGardeMap.CLIMB_L;
+        } else if (objCollisionBas instanceof Brique) {
+            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
+        }
+
+        if (objCollisionBas instanceof Brique && objCollisionBas.binDetruit &&
+             !this.binPiege && !this.binLiberation && !this.binInvincible) {
+            this.binPiege = true;
+            instanceMoteurSon.jouerSon(5);
+            window.setTimeout( () => {
+                this.binPiege = false;
+                this.binLiberation = true;
+            }, 2000);
+            this.dblPosX = Math.round(this.dblPosX);
+            this.dblPosY++;
+            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.PIEGE_R : enumGardeMap.PIEGE_L;
+            if (this.objLingot) {
+                objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot
+            }
+        } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
+            this.intShakeCount++;
+            if (this.intShakeCount > 4) {
+                this.intShakeCount = 0;
+                this.binLiberation = false;
+                this.binInvincible = true;
+                this.dblAncienX = this.dblPosX;
+                this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
+                this.dblPosY--;
+            }
+        } else if (this.binRevive && intFrameExact == this.tabEtatAnim.length - 1) {
+            this.binEtatVie = true;
+            this.binRevive = false;
+            this.tabEtatAnim = enumGardeMap.RUN_R;
+            this.binMoveRight = true;
+        }
+
+        this.binInvincible = this.binInvincible && Math.abs(this.dblAncienX - this.dblPosX) < 1;
+
+        if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
             objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
             this.objLingot.objAncienGarde = this;
             let objLingotSave = this.objLingot;
@@ -92,42 +147,61 @@ class Garde extends EntiteDynamique{
             window.setTimeout(() => fctTimeout(this.objLingot), 2000);
             this.objLingot = null;
         }
+        
+        if (this.binMoving || this.binLiberation || this.binRevive) {
+            this.dblAnimFrame += DBL_FPS_GARDE;            
+        }
+
+        if (intFrameExact >= this.tabEtatAnim.length - 1) {
+            this.dblAnimFrame = 0;
+        }
+
+        this.binMoving = false;        
     }
 
+    /**
+     * Version custom du dessiner() de Entité Dynamique. Dessine le garde sur un
+     * canvas séparé. Ensuite, prend le image data, change les couleurs selon l'état
+     * et mets le image data dans le canvas principal.
+     */
     dessiner() {
-        let objC2D2 = document.getElementById('cvDessin').getContext('2d');
-        let intFrameExact = Math.floor(this.dblAnimFrame)
-        objC2D2.clearRect(0, 0, dblLargCase, dblHautCase);
-        objC2D2.fillRect(0, 0, dblLargCase, dblHautCase);
-        objC2D2.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
-                         dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
-                         0, 0, dblLargCase, dblHautCase);
-        let objImageDataS = objC2D2.getImageData(0, 0, dblLargCase, dblHautCase);
-        let objImageDataD = objC2D.getImageData(this.dblPosX * dblLargCase, this.dblPosY * dblHautCase, dblLargCase, dblHautCase);
-        
-        let tabDonnee = objImageDataS.data;
-        for (let i = 0; i < tabDonnee.length; i += 4) {
-            let intRouge = objImageDataS.data[i];
-            let intGreen = objImageDataS.data[i + 1];
-            let intBlue = objImageDataS.data[i + 2];
-            let tabVRGB = CHROMA_KEY_CHANDAIL;
-            if (intRouge == tabVRGB[0] && intGreen == tabVRGB[1] && intBlue == tabVRGB[2]) {
-                objImageDataD.data[i] = enumCoulsGardes[this.intNbGarde][0];
-                objImageDataD.data[i + 1] = enumCoulsGardes[this.intNbGarde][1];
-                objImageDataD.data[i + 2] = enumCoulsGardes[this.intNbGarde][2];
-            } else if (intRouge == intGreen && intGreen == intBlue && intBlue == 255) {
-                if (this.objLingot) {
-                    objImageDataD.data[i] = 255;
-                    objImageDataD.data[i + 1] = 242;
-                    objImageDataD.data[i + 2] = 0;
-                } else {
-                    objImageDataD.data[i] = 255;
-                    objImageDataD.data[i + 1] = 255;
-                    objImageDataD.data[i + 2] = 255;
+        if (this.binEtatVie) {
+            let objC2D2 = document.getElementById('cvDessin').getContext('2d');
+            let intFrameExact = Math.floor(this.dblAnimFrame);
+            objC2D2.clearRect(0, 0, dblLargCase, dblHautCase);
+            objC2D2.fillRect(0, 0, dblLargCase, dblHautCase);
+            objC2D2.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
+                            dblHautCase * this.tabEtatAnim[intFrameExact][1], dblLargCase, dblHautCase,
+                            0, 0, dblLargCase, dblHautCase);
+            //Source
+            let objImageDataS = objC2D2.getImageData(0, 0, dblLargCase, dblHautCase);
+            //Destination
+            let objImageDataD = objC2D.getImageData(this.dblPosX * dblLargCase, this.dblPosY * dblHautCase, dblLargCase, dblHautCase);
+            
+            let tabDonnee = objImageDataS.data;
+            for (let i = 0; i < tabDonnee.length; i += 4) {
+                let intRouge = objImageDataS.data[i];
+                let intGreen = objImageDataS.data[i + 1];
+                let intBlue = objImageDataS.data[i + 2];
+                let tabVRGB = CHROMA_KEY_CHANDAIL;
+                if (intRouge == tabVRGB[0] && intGreen == tabVRGB[1] && intBlue == tabVRGB[2]) {
+                    objImageDataD.data[i] = enumCoulsGardes[this.intNbGarde][0];
+                    objImageDataD.data[i + 1] = enumCoulsGardes[this.intNbGarde][1];
+                    objImageDataD.data[i + 2] = enumCoulsGardes[this.intNbGarde][2];
+                } else if (intRouge == intGreen && intGreen == intBlue && intBlue == 255) {
+                    if (this.objLingot) {
+                        objImageDataD.data[i] = 255;
+                        objImageDataD.data[i + 1] = 242;
+                        objImageDataD.data[i + 2] = 0;
+                    } else {
+                        objImageDataD.data[i] = 255;
+                        objImageDataD.data[i + 1] = 255;
+                        objImageDataD.data[i + 2] = 255;
+                    }
                 }
             }
+            objC2D.putImageData(objImageDataD, this.dblPosX * dblLargCase, this.dblPosY * dblHautCase);
         }
-        objC2D.putImageData(objImageDataD, this.dblPosX * dblLargCase, this.dblPosY * dblHautCase);
     }
 
     pathFinding(){
@@ -287,7 +361,6 @@ class Garde extends EntiteDynamique{
             paths = newPaths;
         }
 
-        //console.log(playerPath);
         this.goToInters(playerPath.tabIntersections[0]);
 
         */
@@ -318,7 +391,7 @@ class Garde extends EntiteDynamique{
     }
 
 /**
- 0* 
+ * 
  * @param {Path} path 
  */
     nextPaths(path){
@@ -407,20 +480,6 @@ class Garde extends EntiteDynamique{
                             }
                         }
                     }
-
-                    
-
-                   // console.log(Garde.tabIntersections);
-
-                   /*
-                    if(Garde.tabIntersections[i][j] instanceof Intersection){
-                        objC2D.save();
-                        objC2D.fillStyle = "#FF0000";
-                        //console.log(objC2D.fillStyle);
-                        objC2D.fillRect(j * dblLargCase, i * dblHautCase, 5, 5);
-                        //objC2D.fill();
-                        objC2D.restore();
-                    }*/
         }
 
         let comparateurInters = function (e, element) {
@@ -494,6 +553,16 @@ class Garde extends EntiteDynamique{
                     });
 
         }
-        console.log(Garde.tabIntersections);
+    }
+
+    mourir() {
+        this.binEtatVie = false;
+        instanceMoteurSon.jouerSon(1);
+        window.setTimeout(() => this.revivre(), 1000);
+    }
+
+    revivre() {
+        objJeu.objNiveau.placerGarde(this);
+        this.binRevive = true;
     }
 }

@@ -8,8 +8,8 @@ canvas {
 }
 
 .sLargeurEcran {
-    width: 320px;
-    height: 160px;
+    width: 640px;
+    height: 320px;
 }
 
 @font-face {

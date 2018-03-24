@@ -19,6 +19,7 @@ class Brique extends Case{
         this.dblAnimFrame = enumMapBrique.RESTORE.length - 1;
         this.binEnDestruction = false;
         this.binDetruit = false;
+        this.binRempli = false;
         this.intTimeoutID = null;
     }
 

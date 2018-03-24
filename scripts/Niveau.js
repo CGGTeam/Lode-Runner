@@ -53,8 +53,6 @@ class Niveau extends Dessinable{
     this.dblCompteurEchelle = 0;
     this.intLongueurEchelle = 4;
     this.lireFichierNiveau(strFichierNiveau);
-    console.log(this.tabGrilleNav);
-    console.log(this.tabGrilleNiveau);
     Garde.tabIntersections = [];
   }
   
@@ -195,5 +193,32 @@ class Niveau extends Dessinable{
     let tabXPoss = tabBonneEntree[1];
     let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1)[0];
     return new Garde(intX, intY, intNbGarde);
+  }
+
+  placerGarde (objGarde) {
+    let mapSpawn = new Map();
+    this.majSpawnMap(mapSpawn);
+
+    let itMap = mapSpawn.entries();
+    let intPositionY = Math.floor(Math.random() * mapSpawn.size);
+    for (let i = 0; i < intPositionY - 1; i++){
+      itMap.next();
+    }
+    let tabBonneEntree = itMap.next().value;
+    let intY = tabBonneEntree[0];
+    let tabXPoss = tabBonneEntree[1];
+    let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1)[0];
+
+    objGarde.dblPosX = intX;
+    objGarde.dblPosY = intY;
+  }
+
+  majSpawnMap (mapSpawn) {
+    for (let i = 0; i < this.tabGrilleNiveau.length; i++) {
+      for (let j = 0; j < this.tabGrilleNiveau[i].length; j++) {
+        if (this.tabGrilleNiveau[i][j])
+          this.tabGrilleNiveau[i][j].updateSpawn(this.tabGrilleNiveau, mapSpawn);
+      }
+    }
   }
 }
