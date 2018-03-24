@@ -42,7 +42,7 @@ class Garde extends EntiteDynamique{
         this.pathToPlayer = null;
         this.tabEtatAnim = this.enumAnim.RUN_R;
         this.binLiberation = false;
-        this.binPiege = false
+        this.binPiege = false;
         this.intShakeCount = 0;
         this.binInvincible = false;
         this.dblAncienX = 0;
@@ -70,7 +70,7 @@ class Garde extends EntiteDynamique{
 
         this.getCollisions().forEach((x) => {
             if (x instanceof Lingot && this != x.objAncienGarde) {
-                instanceMoteurSon.jouerSon(4); //REMPLACER AVEC SON DIFFÉRENT
+                instanceMoteurSon.jouerSon(4);
                 this.objLingot = objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX];
                 objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
             }
@@ -93,7 +93,7 @@ class Garde extends EntiteDynamique{
                this.binPiege = true;
                window.setTimeout( () => {
                    this.binPiege = false;
-                   this.binLiberation = true;
+                   this.binLiberation = true;W
                }, 2000);
                this.dblPosX = Math.round(this.dblPosX);
                this.dblPosY++;
@@ -402,6 +402,7 @@ class Garde extends EntiteDynamique{
 
     mourir() {
         this.binEtatVie = false;
+        instanceMoteurSon.jouerSon(1);
         window.setTimeout(() => this.revivre(), 1000);
     }
 
