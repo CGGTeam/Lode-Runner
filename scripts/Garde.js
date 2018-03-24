@@ -3,8 +3,8 @@ const enumGardeMap = Object.freeze({
     RUN_L : [[3, 0],[4, 0], [5, 0]],
     FALL_R : [[8, 0]],
     FALL_L : [[8, 1]],
-    CLIMB_R : [[0, 0],[1, 0], [2, 0]],
-    CLIMB_L : [[3, 0],[4, 0], [5, 0]],
+    CLIMB_R : [[0, 1],[1, 1], [2, 1]],
+    CLIMB_L : [[3, 1],[4, 1], [5, 1]],
     CLIMB_U : [[6, 0],[7, 0]],
     CLIMB_D : [[7, 0],[6, 0]],
     PIEGE_R : [[8, 0], [9, 0],[10, 0]],
@@ -50,7 +50,7 @@ class Garde extends EntiteDynamique{
     }
 
     mettreAJourAnimation () {
-        this.binMoving = false;
+        let intFrameExact = Math.floor(this.dblAnimFrame);
         try { //TODO: solution plus élégante
             let dblBorneG = this.dblPosX - 0.5;
             let dblBorneD = this.dblPosX + 0.5;
@@ -76,15 +76,23 @@ class Garde extends EntiteDynamique{
             }
         });
         this.setColBin();
+        let objCollisionCentre = objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)];
+        let objCollisionBas =  objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY) + 1][Math.round(this.dblPosX)];
+        if (objCollisionCentre instanceof Echelle && Math.round(this.dblPosY) != this.dblPosY &&
+          !(objCollisionBas instanceof Brique) || objCollisionBas instanceof Echelle) {
+            this.tabEtatAnim = this.binMoveUp ? enumGardeMap.CLIMB_U : enumGardeMap.CLIMB_D;
+        } else if (objCollisionCentre instanceof Barre) {
+            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.CLIMB_R : enumGardeMap.CLIMB_L;
+        } else if (objCollisionBas instanceof Brique) {
+            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
+        }
 
-        let intFrameExact = Math.floor(this.dblAnimFrame);        
-
-        if (!this.binBriqueBas && !this.binDown && !this.binPiege && !this.binLiberation && !this.binInvincible) {
+        if (objCollisionBas instanceof Brique && objCollisionBas.binDetruit &&
+             !this.binPiege && !this.binLiberation && !this.binInvincible) {
             this.binPiege = true;
             window.setTimeout( () => {
                 this.binPiege = false;
                 this.binLiberation = true;
-                console.log('wack');
             }, 2000);
             this.dblPosX = Math.round(this.dblPosX);
             this.dblPosY++;
@@ -92,7 +100,6 @@ class Garde extends EntiteDynamique{
             if (this.objLingot) {
                 objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot
             }
-            console.log(this.tabEtatAnim.length);
         } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
             this.intShakeCount++;
             if (this.intShakeCount > 4) {
@@ -112,7 +119,7 @@ class Garde extends EntiteDynamique{
 
         this.binInvincible = this.binInvincible && Math.abs(this.dblAncienX - this.dblPosX) < 1;
 
-        if (this.objLingot && Math.random() <= DBL_PROB_DROP){
+        if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
             objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
             this.objLingot.objAncienGarde = this;
             let objLingotSave = this.objLingot;
@@ -130,6 +137,8 @@ class Garde extends EntiteDynamique{
         if (intFrameExact >= this.tabEtatAnim.length - 1) {
             this.dblAnimFrame = 0;
         }
+
+        this.binMoving = false;        
     }
 
     /**
@@ -140,7 +149,7 @@ class Garde extends EntiteDynamique{
     dessiner() {
         if (this.binEtatVie) {
             let objC2D2 = document.getElementById('cvDessin').getContext('2d');
-            let intFrameExact = Math.floor(this.dblAnimFrame)
+            let intFrameExact = Math.floor(this.dblAnimFrame);
             objC2D2.clearRect(0, 0, dblLargCase, dblHautCase);
             objC2D2.fillRect(0, 0, dblLargCase, dblHautCase);
             objC2D2.drawImage(this.objSpriteSheet, dblLargCase * this.tabEtatAnim[intFrameExact][0], 
@@ -207,7 +216,6 @@ class Garde extends EntiteDynamique{
             paths = newPaths;
         }
 
-        //console.log(playerPath);
         this.goToInters(playerPath.tabIntersections[0]);
     }
 
@@ -313,20 +321,6 @@ class Garde extends EntiteDynamique{
                             }
                         }
                     }
-
-                    
-
-                   // console.log(Garde.tabIntersections);
-
-                   /*
-                    if(Garde.tabIntersections[i][j] instanceof Intersection){
-                        objC2D.save();
-                        objC2D.fillStyle = "#FF0000";
-                        //console.log(objC2D.fillStyle);
-                        objC2D.fillRect(j * dblLargCase, i * dblHautCase, 5, 5);
-                        //objC2D.fill();
-                        objC2D.restore();
-                    }*/
         }
 
         let comparateurInters = function (e, element) {
@@ -400,7 +394,6 @@ class Garde extends EntiteDynamique{
                     });
 
         }
-        console.log(Garde.tabIntersections);
     }
 
     mourir() {
