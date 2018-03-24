@@ -31,7 +31,7 @@ const enumCoulsGardes = Object.freeze([
 const DBL_PROB_DROP = 1 / (60 * 10);
 const CHROMA_KEY_CHANDAIL = Object.freeze([186, 219, 239]);
 const CHROMA_KEY_PANTALON = Object.freeze([255, 255, 255]);
-const VITESSE_GARDE = 2.95;  // U/s
+const VITESSE_GARDE = 2.945;  // U/s
 const DBL_FPS_GARDE = 0.25;
 
 class Garde extends EntiteDynamique{
@@ -372,9 +372,9 @@ class Garde extends EntiteDynamique{
             this.deplacer(-Math.round(VITESSE_GARDE * this.delta / 100) / 10,0);
         }else if(prochain.x > this.dblPosX){
             this.deplacer(Math.round(VITESSE_GARDE * this.delta / 100) / 10,0);
-        }else if(prochain.y + 1 < this.dblPosY){
+        }else if(prochain.y < this.dblPosY){
             this.deplacer(0,-Math.round(VITESSE_GARDE * this.delta / 100) / 10);
-        }else if(prochain.y + 1> this.dblPosY){
+        }else if(prochain.y > this.dblPosY){
             this.deplacer(0,Math.round(VITESSE_GARDE * this.delta / 100) / 10);
         }
     }
@@ -557,11 +557,13 @@ class Garde extends EntiteDynamique{
     }
 
     mourir() {
+        /*
         if (this.binEtatVie) {
             this.binEtatVie = false;
             instanceMoteurSon.jouerSon(1);
             window.setTimeout(() => this.revivre(), 1000);
         }
+        */
     }
 
     revivre() {
