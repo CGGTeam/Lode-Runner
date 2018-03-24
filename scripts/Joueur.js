@@ -1,6 +1,5 @@
-const VITESSE_JOUEUR = 5;  // U/s
-const FPS_ANIMATION = 0.25;
-const KEYS_PER_SECONDS = 30;
+const VITESSE_JOUEUR = 6;  // U/s
+
 
 /**
  * Arrays de positions (index) dans le spritesheet, utiliser sx, sy de drawImage
@@ -246,7 +245,7 @@ class Joueur extends EntiteDynamique {
                 objJeu.ramasseLingot();
             }
         });
-        this.updateIntersections();
+        //this.updateIntersections();
     }
 
     mourir(){

@@ -1,5 +1,7 @@
 //@ts-check
 
+
+
 class Jeu {
     constructor() {
         //initAnimation

@@ -176,7 +176,7 @@ class Niveau extends Dessinable{
     for (let i = 0; i < this.tabGardes.length; i++) {
       this.tabGardes[i] = this.genererGarde(mapSpawn, i);
     }
-    Garde.setIntersections();
+    //Garde.setIntersections();
   }
 
   /**

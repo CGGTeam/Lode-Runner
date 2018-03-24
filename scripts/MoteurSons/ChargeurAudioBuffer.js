@@ -50,7 +50,7 @@ class ChargeurAudioBuffer {
      * @param {number} index
      */
     chargerSon(src, index) {
-        let requete = new XMLhttpsRequest();
+        let requete = new XMLHttpRequest();
         let chargeur = this;
 
         requete.open('GET', src, true);
