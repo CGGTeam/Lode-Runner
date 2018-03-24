@@ -42,7 +42,7 @@ class Garde extends EntiteDynamique{
         this.pathToPlayer = null;
         this.tabEtatAnim = this.enumAnim.RUN_R;
         this.binLiberation = false;
-        this.binPiege = false
+        this.binPiege = false;
         this.intShakeCount = 0;
         this.binInvincible = false;
         this.dblAncienX = 0;
@@ -50,6 +50,7 @@ class Garde extends EntiteDynamique{
     }
 
     mettreAJourAnimation () {
+
         this.binMoving = false;
         try { //TODO: solution plus élégante
             let dblBorneG = this.dblPosX - 0.5;
@@ -81,6 +82,7 @@ class Garde extends EntiteDynamique{
 
         if (!this.binBriqueBas && !this.binDown && !this.binPiege && !this.binLiberation && !this.binInvincible) {
             this.binPiege = true;
+            instanceMoteurSon.jouerSon(5);
             window.setTimeout( () => {
                 this.binPiege = false;
                 this.binLiberation = true;
@@ -405,6 +407,7 @@ class Garde extends EntiteDynamique{
 
     mourir() {
         this.binEtatVie = false;
+        instanceMoteurSon.jouerSon(1);
         window.setTimeout(() => this.revivre(), 1000);
     }
 
