@@ -557,7 +557,7 @@ class Garde extends EntiteDynamique{
     }
 
     mourir() {
-        if (this.binEtatVie) {
+        if (this.binEtatVie && this.binPiege) {
             this.binEtatVie = false;
             instanceMoteurSon.jouerSon(1);
             window.setTimeout(() => this.revivre(), 1000);
