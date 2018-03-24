@@ -45,8 +45,6 @@ class Joueur extends EntiteDynamique {
         this.tabEtatAnimPrev = this.enumAnim.RUN_L;
         this.tabEtatAnim = this.enumAnim.RUN_L;
         this.dblAnimFrame = 0;
-        this.binMoving = false;
-        this.binMoveRight = true;
         this.binClimb = false;
         this.objCaseCreusee = null;
         this.intNbSonJoueur = null;
@@ -216,8 +214,8 @@ class Joueur extends EntiteDynamique {
             case 'z':
                 console.log('dig');
                 this.binMoveRight = this.presentKey === 'x';
-                let objCase = objJeu.objNiveau.tabGrilleNiveau[Math.floor(this.dblPosY) + 1]
-                    [Math.floor(this.dblPosX) - (this.presentKey === 'z' ? 1 : -1)];
+                let objCase = objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY) + 1]
+                    [Math.round(this.dblPosX) - (this.presentKey === 'z' ? 1 : -1)];
                 
                 if (this.objCaseCreusee && this.objCaseCreusee != objCase) {
                     this.objCaseCreusee.interrompreDestruction();
@@ -225,8 +223,8 @@ class Joueur extends EntiteDynamique {
                 }
 
                 if (!this.binFalling && objCase && objCase instanceof Brique && !objCase.binDetruit && this.objCaseCreusee != objCase) {
-                    this.dblPosX = Math.floor(this.dblPosX);
-                    this.dblPosY = Math.floor(this.dblPosY);
+                    this.dblPosX = Math.round(this.dblPosX);
+                    this.dblPosY = Math.round(this.dblPosY);
                     objCase.detruire();
                     this.dblAnimFrame = 0;
                     this.objCaseCreusee = objCase;

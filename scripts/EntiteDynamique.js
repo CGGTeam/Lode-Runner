@@ -12,10 +12,11 @@ class EntiteDynamique extends Dessinable{
         this.dblPosY = posInitY;
         this.objSpriteSheet = objSpriteSheet;
         this.or = 0;
-        this.etatVie = true;
+        this.binEtatVie = true;
         this.enumAnim = enumAnim
         this.tabEtatAnim = this.enumAnim.RUN_R;
         this.binMoving = false;
+        this.binMoveRight = true;
     }
 
     dessiner() {
