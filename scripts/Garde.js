@@ -31,7 +31,7 @@ const enumCoulsGardes = Object.freeze([
 const DBL_PROB_DROP = 1 / (60 * 10);
 const CHROMA_KEY_CHANDAIL = Object.freeze([186, 219, 239]);
 const CHROMA_KEY_PANTALON = Object.freeze([255, 255, 255]);
-const VITESSE_GARDE = 2.945;  // U/s
+const VITESSE_GARDE = 2.95;  // U/s
 const DBL_FPS_GARDE = 0.25;
 
 class Garde extends EntiteDynamique{
@@ -49,7 +49,6 @@ class Garde extends EntiteDynamique{
     }
 
     mettreAJourAnimation () {
-
         this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1 / 40;
         this.lastCalled = Date.now();
 
@@ -60,9 +59,6 @@ class Garde extends EntiteDynamique{
         this.binInvincible = false;
         this.dblAncienX = 0;
         this.binRevive = false;
-    }
-
-    mettreAJourAnimation () {
         let intFrameExact = Math.floor(this.dblAnimFrame);
         try { //TODO: solution plus élégante
             let dblBorneG = this.dblPosX - 0.5;
