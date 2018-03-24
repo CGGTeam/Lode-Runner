@@ -31,6 +31,7 @@ const enumCoulsGardes = Object.freeze([
 const DBL_PROB_DROP = 1 / (60 * 10);
 const CHROMA_KEY_CHANDAIL = Object.freeze([186, 219, 239]);
 const CHROMA_KEY_PANTALON = Object.freeze([255, 255, 255]);
+const VITESSE_GARDE = 2.945;  // U/s
 const DBL_FPS_GARDE = 0.25;
 
 class Garde extends EntiteDynamique{
@@ -40,6 +41,18 @@ class Garde extends EntiteDynamique{
         this.intNbGarde = intNbGarde;
         this.dblAnimFrame = 0;
         this.pathToPlayer = null;
+        this.delta = 0;
+        this.lastCalled = null;
+        this.comparateurCases = function(e, element){
+            return e.x == element.x && e.y == element.y;
+        }
+    }
+
+    mettreAJourAnimation () {
+
+        this.delta = (this.lastCalled) ? Date.now() - this.lastCalled : 1 / 40;
+        this.lastCalled = Date.now();
+
         this.tabEtatAnim = this.enumAnim.RUN_R;
         this.binLiberation = false;
         this.binPiege = false;
@@ -67,6 +80,10 @@ class Garde extends EntiteDynamique{
             }
         } catch (e) {
         }
+
+        this.pathFinding();
+        // var map = objC2D.getImageData(0,0,320,240);
+        // var imdata = map.data;
 
         this.getCollisions().forEach((x) => {
             if (x instanceof Lingot && this != x.objAncienGarde) {
@@ -193,6 +210,133 @@ class Garde extends EntiteDynamique{
     }
 
     pathFinding(){
+
+        let tabPremieresCases = [];
+        let tabCasesDejaCheck = [];
+        let tabLastChecked = [];
+        let intX = Math.round(this.dblPosX);
+        let intY = Math.floor(this.dblPosY);
+        let tabJeu = objJeu.objNiveau.tabGrilleNiveau;
+        let tabNav = objJeu.objNiveau.tabGrilleNav;
+
+        if(tabNav[intY + 1][intX]){
+            let tempo = {x: intX, y: intY + 1};
+            tempo.objFirst = tempo;
+            tabPremieresCases.push(tempo);
+            tabCasesDejaCheck.push(tempo);
+        }
+        if(tabNav[intY - 1][intX]){
+            let tempo = {x: intX, y: intY - 1};
+            tempo.objFirst = tempo;
+            tabPremieresCases.push(tempo);
+            tabCasesDejaCheck.push(tempo);
+        }
+        if(tabNav[intY][intX + 1]){
+            let tempo = {x: intX + 1, y: intY};
+            tempo.objFirst = tempo;
+            tabPremieresCases.push(tempo);
+            tabCasesDejaCheck.push(tempo);
+        }
+        if(tabNav[intY][intX - 1]){
+            let tempo = {x: intX - 1, y: intY};
+            tempo.objFirst = tempo;
+            tabPremieresCases.push(tempo);
+            tabCasesDejaCheck.push(tempo);
+        }
+
+        tabLastChecked = tabPremieresCases.splice(0);
+
+        while(tabLastChecked.length > 1){
+            
+            let tabTempo = [];
+            for(let i = 0; i < tabLastChecked.length; i++){
+            
+                let objLast = tabLastChecked[i]; 
+                if(Math.round(objJeu.objNiveau.objJoueur.dblPosX) == objLast.x 
+                    && Math.floor(objJeu.objNiveau.objJoueur.dblPosY) == objLast.y){
+                    tabTempo = [objLast];
+                    break;
+                }
+
+                if(tabNav[objLast.y + 1][objLast.x]){
+                    let objTempo = {x: objLast.x, y: objLast.y + 1, objFirst: objLast.objFirst};
+                    if(!tabCasesDejaCheck.inArray(this.comparateurCases, objTempo)){
+                        tabTempo.push(objTempo);
+                        tabCasesDejaCheck.push(objTempo);
+                    }
+                }
+                if(tabNav[objLast.y - 1][objLast.x]){
+                    let objTempo = {x: objLast.x, y: objLast.y - 1, objFirst: objLast.objFirst};
+                    if(!tabCasesDejaCheck.inArray(this.comparateurCases, objTempo)){
+                        tabTempo.push(objTempo);
+                        tabCasesDejaCheck.push(objTempo);
+                    }
+                }
+                if(tabNav[objLast.y][objLast.x + 1]){
+                    let objTempo = {x: objLast.x + 1, y: objLast.y, objFirst: objLast.objFirst};
+                    if(!tabCasesDejaCheck.inArray(this.comparateurCases, objTempo)){
+                        tabTempo.push(objTempo);
+                        tabCasesDejaCheck.push(objTempo);
+                    }
+                }
+                if(tabNav[objLast.y][objLast.x - 1]){
+                    let objTempo = {x: objLast.x - 1, y: objLast.y, objFirst: objLast.objFirst};
+                    if(!tabCasesDejaCheck.inArray(this.comparateurCases, objTempo)){
+                        tabTempo.push(objTempo);
+                        tabCasesDejaCheck.push(objTempo);
+                    }
+                }
+            }
+            tabLastChecked = tabTempo;
+        }
+
+
+        this.goToNext(tabLastChecked[0].objFirst);
+
+
+                /*
+                if(tabNav[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX]){
+                    if(!tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX])){
+                        tabTempo.push(tabJeu[tabLastChecked[i].intPosY + 1 - j][tabLastChecked[i].intPosX]);
+                        tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY + 1 - j][tabLastChecked[i].intPosX]);
+                    }
+                }
+                if(tabNav[tabLastChecked[i].intPosY - 2][tabLastChecked[i].intPosX]){
+                    if(!tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX])){
+                        tabTempo.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX]);
+                        tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX]);
+                    }
+                }
+                if(tabNav[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX + 1]){
+                    if(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX + 1] instanceof Barre && 
+                        !tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX + 1])){
+                            tabTempo.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX + 1]);
+                            tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX + 1]);
+                    }
+                    else if(!tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX + 1])){
+                        tabTempo.push(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX + 1]);
+                        tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX + 1]);
+                    }
+                }
+                if(tabNav[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX - 1]){
+                    if(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX - 1] instanceof Barre && 
+                        !tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX - 1])){
+                            tabTempo.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX - 1]);
+                            tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY - 1][tabLastChecked[i].intPosX - 1]);
+                    }
+                    else if(!tabCasesDejaCheck.refInArray(tabJeu[tabLastChecked[i].intPosY + 1][tabLastChecked[i].intPosX])){
+                        tabTempo.push(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX - 1]);
+                        tabCasesDejaCheck.push(tabJeu[tabLastChecked[i].intPosY][tabLastChecked[i].intPosX - 1]);
+                    }
+                }
+            }
+            tabLastChecked = tabTempo;
+            */
+        //}
+
+       // this.goToInters(tabLastChecked[0]);
+
+        /*
         let playerPath = null;
         let paths = [];
         let newPaths = [];
@@ -205,7 +349,7 @@ class Garde extends EntiteDynamique{
         }}else if(Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)] instanceof Intersection){
             let tabNextsTempo = Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)].nextIntersections();
             for(let i = 0; i < tabNextsTempo.length; i++){
-                paths.pushCroissant(new Path(this.dblPosY, this.dblPosX, Garde.tabIntersections[Math.round(this.dblPosY)][Math.round(this.dblPosX)]), comparateurCroissant);
+                paths.pushCroissant(new Path(this.dblPosY, this.dblPosX, tabNextsTempo[i]), comparateurCroissant);
             }
                 } 
         while(!playerPath){
@@ -223,6 +367,20 @@ class Garde extends EntiteDynamique{
         }
 
         this.goToInters(playerPath.tabIntersections[0]);
+
+        */
+    }
+
+    goToNext(prochain){
+        if(prochain.x < this.dblPosX){
+            this.deplacer(-Math.round(VITESSE_GARDE * this.delta / 100) / 10,0);
+        }else if(prochain.x > this.dblPosX){
+            this.deplacer(Math.round(VITESSE_GARDE * this.delta / 100) / 10,0);
+        }else if(prochain.y + 1 < this.dblPosY){
+            this.deplacer(0,-Math.round(VITESSE_GARDE * this.delta / 100) / 10);
+        }else if(prochain.y + 1> this.dblPosY){
+            this.deplacer(0,Math.round(VITESSE_GARDE * this.delta / 100) / 10);
+        }
     }
 
     goToInters(intersection){
@@ -230,9 +388,9 @@ class Garde extends EntiteDynamique{
             this.deplacer(-0.1,0);
         }else if(intersection.intPosX > this.dblPosX){
             this.deplacer(0.1,0);
-        }else if(intersection.intPosY < this.dblPosY){
+        }else if(intersection.intPosY + 1< this.dblPosY){
             this.deplacer(0,-0.1);
-        }else if(intersection.intPosY > this.dblPosY){
+        }else if(intersection.intPosY + 1 > this.dblPosY){
             this.deplacer(0,0.1);
         }
     }
