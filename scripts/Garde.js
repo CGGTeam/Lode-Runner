@@ -76,69 +76,73 @@ class Garde extends EntiteDynamique{
             }
         });
         this.setColBin();
-        let objCollisionCentre = objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)];
-        let objCollisionBas =  objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY) + 1][Math.round(this.dblPosX)];
-        if (objCollisionCentre instanceof Echelle && Math.round(this.dblPosY) != this.dblPosY &&
-          !(objCollisionBas instanceof Brique) || objCollisionBas instanceof Echelle) {
-            this.tabEtatAnim = this.binMoveUp ? enumGardeMap.CLIMB_U : enumGardeMap.CLIMB_D;
-        } else if (objCollisionCentre instanceof Barre) {
-            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.CLIMB_R : enumGardeMap.CLIMB_L;
-        } else if (objCollisionBas instanceof Brique) {
-            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
-        }
-
-        if (objCollisionBas instanceof Brique && objCollisionBas.binDetruit &&
-             !this.binPiege && !this.binLiberation && !this.binInvincible) {
-            this.binPiege = true;
-            window.setTimeout( () => {
-                this.binPiege = false;
-                this.binLiberation = true;
-            }, 2000);
-            this.dblPosX = Math.round(this.dblPosX);
-            this.dblPosY++;
-            this.tabEtatAnim = this.binMoveRight ? enumGardeMap.PIEGE_R : enumGardeMap.PIEGE_L;
-            if (this.objLingot) {
-                objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot
-            }
-        } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
-            this.intShakeCount++;
-            if (this.intShakeCount > 4) {
-                this.intShakeCount = 0;
-                this.binLiberation = false;
-                this.binInvincible = true;
-                this.dblAncienX = this.dblPosX;
+        try {
+            let objCollisionCentre = objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)];
+            let objCollisionBas =  objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY) + 1][Math.round(this.dblPosX)];
+            if (objCollisionCentre instanceof Echelle && Math.round(this.dblPosY) != this.dblPosY &&
+                !(objCollisionBas instanceof Brique) || objCollisionBas instanceof Echelle) {
+                this.tabEtatAnim = this.binMoveUp ? enumGardeMap.CLIMB_U : enumGardeMap.CLIMB_D;
+            } else if (objCollisionCentre instanceof Barre) {
+                this.tabEtatAnim = this.binMoveRight ? enumGardeMap.CLIMB_R : enumGardeMap.CLIMB_L;
+            } else if (objCollisionBas instanceof Brique) {
                 this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
-                this.dblPosY--;
             }
-        } else if (this.binRevive && intFrameExact == this.tabEtatAnim.length - 1) {
-            this.binEtatVie = true;
-            this.binRevive = false;
-            this.tabEtatAnim = enumGardeMap.RUN_R;
-            this.binMoveRight = true;
-        }
 
-        this.binInvincible = this.binInvincible && Math.abs(this.dblAncienX - this.dblPosX) < 1;
+            if (objCollisionBas instanceof Brique && objCollisionBas.binDetruit &&
+                !this.binPiege && !this.binLiberation && !this.binInvincible) {
+               this.binPiege = true;
+               window.setTimeout( () => {
+                   this.binPiege = false;
+                   this.binLiberation = true;
+               }, 2000);
+               this.dblPosX = Math.round(this.dblPosX);
+               this.dblPosY++;
+               this.tabEtatAnim = this.binMoveRight ? enumGardeMap.PIEGE_R : enumGardeMap.PIEGE_L;
+               if (this.objLingot) {
+                   objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot
+               }
+           } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
+               this.intShakeCount++;
+               if (this.intShakeCount > 4) {
+                   this.intShakeCount = 0;
+                   this.binLiberation = false;
+                   this.binInvincible = true;
+                   this.dblAncienX = this.dblPosX;
+                   this.tabEtatAnim = this.binMoveRight ? enumGardeMap.RUN_R : enumGardeMap.RUN_L;
+                   this.dblPosY--;
+               }
+           } else if (this.binRevive && intFrameExact == this.tabEtatAnim.length - 1) {
+               this.binEtatVie = true;
+               this.binRevive = false;
+               this.tabEtatAnim = enumGardeMap.RUN_R;
+               this.binMoveRight = true;
+           }
+   
+           this.binInvincible = this.binInvincible && Math.abs(this.dblAncienX - this.dblPosX) < 1;
+   
+           if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
+               objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
+               this.objLingot.objAncienGarde = this;
+               let objLingotSave = this.objLingot;
+               let fctTimeout = (objLingot) => {
+                   objLingotSave.objAncienGarde = null;
+               }
+               window.setTimeout(() => fctTimeout(this.objLingot), 2000);
+               this.objLingot = null;
+           }
+           
+           if (this.binMoving || this.binLiberation || this.binRevive) {
+               this.dblAnimFrame += DBL_FPS_GARDE;            
+           }
+   
+           if (intFrameExact >= this.tabEtatAnim.length - 1) {
+               this.dblAnimFrame = 0;
+           }
+   
+           this.binMoving = false;       
+        } catch (e){
 
-        if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
-            objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
-            this.objLingot.objAncienGarde = this;
-            let objLingotSave = this.objLingot;
-            let fctTimeout = (objLingot) => {
-                objLingotSave.objAncienGarde = null;
-            }
-            window.setTimeout(() => fctTimeout(this.objLingot), 2000);
-            this.objLingot = null;
-        }
-        
-        if (this.binMoving || this.binLiberation || this.binRevive) {
-            this.dblAnimFrame += DBL_FPS_GARDE;            
-        }
-
-        if (intFrameExact >= this.tabEtatAnim.length - 1) {
-            this.dblAnimFrame = 0;
-        }
-
-        this.binMoving = false;        
+        } 
     }
 
     /**
