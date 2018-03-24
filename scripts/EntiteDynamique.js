@@ -86,12 +86,12 @@ class EntiteDynamique extends Dessinable{
                 this.binDown = (this.binDown || (this.dblPosX - 0.5 < value.intPosX && this.dblPosX + 0.5 > value.intPosX && this.dblPosY < value.intPosY));
 
             } else if( value instanceof Brique){
-                this.binBriqueBas = (this.binBriqueBas || (this.dblPosY + 1 > value.intPosY - 0.25 && this.dblPosY + 1 < value.intPosY + 0.25 ) && !value.binDetruit);
+                this.binBriqueBas = (this.binBriqueBas || (this.dblPosY + 1 > value.intPosY - 0.25 && this.dblPosY + 1 < value.intPosY + 0.25 ) && (!value.binDetruit || value.binRempli));
                 this.binBriqueHaut = (this.binBriqueHaut || (this.dblPosY - 1 === value.intPosY));
                 this.binBriqueGauche = (this.binBriqueGauche || (this.dblPosX - 1 < value.intPosX + 0.3 && this.dblPosX - 1 > value.intPosX - 0.3)
-                    && this.dblPosY < value.intPosY + 1 && this.dblPosY > value.intPosY - 1  && !value.binDetruit);
+                    && this.dblPosY < value.intPosY + 1 && this.dblPosY > value.intPosY - 1  && (!value.binDetruit || value.binRempli));
                 this.binBriqueDroite = (this.binBriqueDroite || (this.dblPosX + 1 < value.intPosX + 0.3 && this.dblPosX + 1 > value.intPosX - 0.3)
-                    && this.dblPosY < value.intPosY + 1 && this.dblPosY > value.intPosY - 1)  && !value.binDetruit;
+                    && this.dblPosY < value.intPosY + 1 && this.dblPosY > value.intPosY - 1)  && (!value.binDetruit || value.binRempli);
 
                 this.binBriqueLive = ((this.dblPosY > value.intPosY - 0.5 && this.dblPosY < value.intPosY + 0.5 ) && (this.dblPosX < value.intPosX + 0.5 && this.dblPosX > value.intPosX - 0.5)) && !value.binDetruit;
                 //console.log(this.binBriqueLive);

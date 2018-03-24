@@ -210,7 +210,7 @@ class Niveau extends Dessinable{
     let intX = tabXPoss.splice(Math.floor(Math.random() * tabXPoss.length), 1)[0];
 
     objGarde.dblPosX = intX;
-    objGarde.dblPosY = intY;
+    objGarde.dblPosY = intY + 1;
   }
 
   majSpawnMap (mapSpawn) {
