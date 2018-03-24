@@ -82,7 +82,7 @@ class Garde extends EntiteDynamique{
         // var imdata = map.data;
 
         this.getCollisions().forEach((x) => {
-            if (x instanceof Lingot && this != x.objAncienGarde) {
+            if (x instanceof Lingot && this != x.objAncienGarde && !this.objLingot) {
                 instanceMoteurSon.jouerSon(4);
                 this.objLingot = objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX];
                 objJeu.objNiveau.tabGrilleNiveau[x.intPosY][x.intPosX] = null;
@@ -115,6 +115,8 @@ class Garde extends EntiteDynamique{
                 if (this.objLingot) {
                     objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY - 1)][Math.round(this.dblPosX)] = this.objLingot;
                     this.objLingot.objAncienGarde = this;
+                    this.objLingot.intPosX = Math.round(this.dblPosX);
+                    this.objLingot.intPosY = Math.round(this.dblPosY) - 1;
                     this.objLingot = null;
                 }
            } else if (this.binLiberation && intFrameExact == this.tabEtatAnim.length - 1) {
@@ -141,7 +143,8 @@ class Garde extends EntiteDynamique{
    
            if (this.objLingot && Math.random() <= DBL_PROB_DROP && this.binBriqueBas){
                objJeu.objNiveau.tabGrilleNiveau[Math.round(this.dblPosY)][Math.round(this.dblPosX)] = this.objLingot;
-               this.objLingot.objAncienGarde = this;
+               this.objLingot.intPosX = Math.round(this.dblPosX);
+               this.objLingot.intPosY = Math.round(this.dblPosY);
                this.objLingot.objAncienGarde = this;
                this.objLingot = null;
            }
