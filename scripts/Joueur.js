@@ -1,4 +1,4 @@
-const VITESSE_JOUEUR = 6;  // U/s
+const VITESSE_JOUEUR = 4;  // U/s
 
 
 /**
